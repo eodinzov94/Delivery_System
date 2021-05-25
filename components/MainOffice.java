@@ -1,0 +1,275 @@
+package components;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Vector;
+
+import GUI.DeliveryGUI;
+
+/**
+ * This class represents the main office in the delivery system.
+ * <p>
+ * 
+ * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
+ * @version 1.0 -- 29.3.2021
+ *
+ */
+public class MainOffice implements Runnable{
+	public static volatile MainOffice instance=null;
+	public static boolean isFinished;
+	public static Random rand = new Random();
+	private static int clock = 0;
+	private final int numOfPackages;
+	private Hub hub;
+	private Thread hubThread;
+	private Vector<Package> packages;
+	private ArrayList<Customer> customers;
+
+	
+	public static MainOffice getInstance() {
+		if (instance == null) {
+            synchronized (MainOffice.class) {
+                if (instance == null) {
+                    instance = new MainOffice(5,5,20);
+                }
+            }
+        }
+        return instance;
+	}
+	/**
+	 * Constructor for the class MainOffice. Changed to double-checked singleton in part 3 of the project
+	 * <p>
+	 * The hub is always created first, afterwards we add 'trucksForBranch' amount
+	 * of trucks to it, then a single NonStandardTruck. Afterwards, a 'branches'
+	 * amount of branches is created, each with 'trucksForBranch' amount of vans.
+	 * 
+	 * @param branches        - integer representing the number of branches under
+	 *                        the hub.
+	 * @param trucksForBranch - integer representing how many trucks each branch
+	 *                        (and the hub) will have.
+	 * @param numOfPackages - integer representing how many packages will be generated in the simulation
+	 */
+	private MainOffice(int branches, int trucksForBranch, int numOfPackages) {		
+		isFinished = false;
+		this.numOfPackages = numOfPackages;
+		Hub.resetHub();
+		hub = Hub.getHub();
+		hub.addTruck("NonStandardTruck");
+		for (int i = 0; i < trucksForBranch; i++) {
+			hub.addTruck("StandardTruck");
+		}
+		System.out.println();
+		for (int i = 0; i < branches; i++) {
+			Branch b = new Branch();
+			hub.addBranch(b);
+			for (int j = 0; j < trucksForBranch; j++) {
+				b.addTruck("Van");
+			}
+			System.out.println();
+		}
+		packages = new Vector<Package>();
+		hubThread = new Thread(hub);
+		customers = new ArrayList<Customer>();
+		for(int i=0; i<10;i++)
+			customers.add(new Customer());
+	}
+
+	/**
+	 * This function starts all threads by using startAllThreads() method
+	 *  that representing Trucks/Branches/Hub.. etc
+	 * then simulates our whole system after Button "Start" in GUI was pressed.
+	 * <p>
+	 * Using the parameter 'playTime', we activate the function tick to simulate
+	 * both activity in the system (in the form of the function work() ) and to
+	 * create new packages. At the end of the simulation, we use printReport() to
+	 * print all the packages and their statuses.
+	 * 
+	 * @param playTime - integer representing how long the system works.
+	 * 
+	 */
+	public void play() {
+		isFinished = false;
+		System.out.println("========================== START INIT==========================");
+		startAllThreads();
+		System.out.println("========================== START SIMULATION==========================");
+		while (!checkIfFinished() || packages.size() == 0) {
+			DeliveryGUI.pauser.look();
+			tick();
+			try {
+				Thread.sleep(500L);
+			} catch (InterruptedException e) {
+			}
+		}
+		isFinished = true;
+		DeliveryGUI.getDeliveryGUI().getDisplay().run();
+		System.out.println("========================== STOP ==========================");
+		this.printReport();
+	}
+
+	/**
+	 * The function prints all the packages we created and their statuses. It is
+	 * used by the function play()
+	 * 
+	 */
+	public void printReport() {
+		for (Package p : packages) {
+			System.out.println();
+			p.printTracking();
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Standard function to represent the internal clock as a String.
+	 * 
+	 * @return String representation of the system clock in a MM:SS format.
+	 * 
+	 */
+	public String clockString() {
+		Integer m, s;
+		m = clock / 60;
+		s = clock % 60;
+		String clockStr;
+		clockStr = (m > 9) ? m.toString() : "0" + m.toString();
+
+		clockStr += ':';
+
+		clockStr += (s > 9) ? s.toString() : "0" + s.toString();
+
+		System.out.println(clockStr);
+		return clockStr;
+	}
+
+	/**
+	 * Standard function to represent class as a String.
+	 * 
+	 * @return String representation of class.
+	 * 
+	 */
+	@Override
+	public String toString() {
+		return "MainOffice";
+	}
+
+	/**
+	 * Get function for the field 'clock'
+	 * 
+	 * @return clock - Integer
+	 * 
+	 */
+	public static int getClock() {
+		return clock;
+	}
+
+	/**
+	 * Get function for the field 'rand'
+	 * 
+	 * @return rand - Random
+	 * 
+	 */
+	public static Random getRand() {
+		return rand;
+	}
+
+	/**
+	 * Get function for the field 'packages'
+	 * 
+	 * @return packages - ArrayList<Package>
+	 * 
+	 */
+	public Vector<Package> getPackages() {
+		return packages;
+	}
+
+	/**
+	 * Set function for the field 'packages'
+	 * 
+	 * @param packages - ArrayList<Package> object.
+	 * 
+	 */
+	public void setPackages(Vector<Package> packages) {
+		this.packages = packages;
+	}
+
+	/**
+	 * This function handles all the creation and activation of elements in the
+	 * system.
+	 * <p>
+	 * This function handles the system's clock, advancing it and printing it to the
+	 * UI. Also, every 5 clock ticks the function creates a new random package to be
+	 * added to the system, thus 'feeding' the system new packages. Furthermore, the
+	 * function calls both the hub's and its branches' work() function, thus
+	 * activating all the elements in the system.
+	 * 
+	 */
+	public void tick() {
+		clockString();
+		clock++;
+	}
+
+
+	
+
+	/**
+	 * This function associates a given package to the correct branch.
+	 * <p>
+	 * The function, given a package, adds it either to the hub if it's nonstandard,
+	 * or to the appropriate branch otherwise.
+	 * 
+	 * @param p - Package, can be of any type.
+	 */
+	public void AssociatePackage(Package p) {
+		if (p instanceof NonStandardPackage)
+			hub.collectPackage(p);
+		else
+			for (Branch b : hub.getBranches())
+				if (b.getBranchId() == p.getSenderAddress().getZip()) {
+					b.collectPackage(p);
+					break;
+				}
+	}
+	/**
+	 * This function checks if system can finish the work 
+	 * (if all packages has statuses Delivered and if all packages generated)
+	 * <p>
+	 * 
+	 * 
+	 * @return true if all packages generated & delivered, false otherwise
+	 */
+	private boolean checkIfFinished() {
+		for (Package p : packages) {
+			if (!(p.getStatus().equals(Status.DELIVERED)) || packages.size()< this.numOfPackages) {
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * Starter for all threads that representing different object in delivery system
+	 * like branches/trucks/hub ... etc
+	 * <p>
+	 */
+	private void startAllThreads() {
+		DeliveryGUI.getDeliveryGUI().startDisplayThread();
+		for (Branch b:hub.getBranches()) {
+			b.startAllTrucks();
+		}
+		for (Customer c: customers){
+			c.start();
+		}
+		hub.startAllBranches();
+		hub.startAllTrucks();
+		hubThread.start();
+			
+	}
+	/**
+	 * This method implements Runnable interface. 
+	 * just used to run a play() method in Thread.
+	 */
+	public void run() {
+		play();
+	}
+	
+	
+
+}
