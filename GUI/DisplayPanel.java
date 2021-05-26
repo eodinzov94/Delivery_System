@@ -76,7 +76,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		allPackages = new ArrayList<DrawPackage>();
 
 		for (int i = 0; i < 50; i++) {
-			Point location = new Point(100 + i * packagesStep(), 15);
+			Point location = new Point(100 + i * 33, 15);
 			allPackages.add(new DrawPackage(location));
 		}
 	}
@@ -108,7 +108,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		allBranches.add(new DrawHub(-1));
 		for (int i = 0; i < numBranches; i++) {
 			Point start = new Point(30, 70 + i * branchesStep());
-			Point pEnd = new Point(1125, 225 + i * hubLinesStep());
+			Point pEnd = new Point(1800, 300 + i * hubLinesStep());
 			Point pStart = new Point(70, 85 + i * branchesStep());
 			DrawPath dp = new DrawPath(pStart, pEnd, DrawHub.getHubColor());
 			allBranches.add(new DrawBranch(start, dp, i));
@@ -182,7 +182,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	 * aspects.
 	 */
 	public int packagesStep() {
-		return 950 / (numPackages - 1);
+		return 950 / (40);
 	}
 
 	/**

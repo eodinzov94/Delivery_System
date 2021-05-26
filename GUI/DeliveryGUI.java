@@ -58,7 +58,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	 */
 	private DeliveryGUI() {
 		super("Post tracking system");
-		this.setSize(1200, 700);
+		this.setSize(1900, 1000);
 		this.setVisible(true);
 		this.setResizable(false);
 		display = new DisplayPanel();

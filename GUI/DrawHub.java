@@ -16,8 +16,8 @@ import java.awt.Graphics;
 public class DrawHub extends DrawBranch {
 
 	static private Color hubColor = new Color(2, 101, 2);
-	static private int x = 1125;
-	static private int y = 205;
+	static private int x = 1800;
+	static private int y = 300;
 	static private int width = 40;
 	static private int height = 200;
 	static public final Point hubLocation = new Point(x,y);

@@ -30,7 +30,7 @@ public class MainOffice implements Runnable{
 		if (instance == null) {
             synchronized (MainOffice.class) {
                 if (instance == null) {
-                    instance = new MainOffice(5,5,20);
+                    instance = new MainOffice(5,5,50);
                 }
             }
         }

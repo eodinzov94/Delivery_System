@@ -45,7 +45,7 @@ public class StandardPackage extends Package {
 	}
 	
 	/**
-	 * Compares this object to another, and returns true if they're equal.
+	 * Compares this object to another, and returns  true if they're equal.
 	 * <p>
 	 * 
 	 * Compares both pointers directly, then checks if there's a type mismatch, and

@@ -19,8 +19,8 @@ import components.NonStandardPackage;
 public class DrawPackage extends DrawObject {
 	public static int numOfPackages = 0;
 	private final int packageID;
-	static private int deltaY = 575;
-	static private int diameter = 30;
+	static private int deltaY = 850;
+	static private int diameter = 25;
 	static Color hasPackage = new Color(204,0,0);
 	static Color noPackage = new Color(255,153,153);
 	private Color upperColor;

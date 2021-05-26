@@ -75,7 +75,7 @@ public class Customer extends Thread implements Node{
 	}
 	@Override
 	public void run() {
-		while(packCreated <2) {
+		while(packCreated <5) {
 			try {
 				DeliveryGUI.pauser.look();
 				createPackage();
