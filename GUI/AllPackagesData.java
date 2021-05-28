@@ -1,10 +1,10 @@
 package GUI;
 
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import components.Hub;
+import components.MainOffice;
 import components.Package;
 /**
  * This class contains logic for sorting the packages info into matrices, as used by the 'All Packages' and 'Branch Info' buttons featured on the system functionality tray.
@@ -35,7 +35,7 @@ public class AllPackagesData{
 	public static String[][] setDataForAllPackages() {
 		
 		//receive system information
-		Vector<Package> packages = DeliveryGUI.getDeliveryGUI().getGame().getPackages();
+		Vector<Package> packages = MainOffice.getInstance().getPackages();
 		int numPackages = packages.size();
 		Package temp;
 		String[][] data = new String[numPackages][];

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import GUI.DisplayPanel;
 import GUI.DrawPackage;
 import GUI.Observable;
-
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 /**
  * This class represents a package in the delivery system.
  * <p>
@@ -17,7 +18,7 @@ import GUI.Observable;
  * @see Branch
  *
  */
-public abstract class Package implements Observable {
+public abstract class Package implements Observable{
 	public static int numOfPackages = 0; // running static integer that helps number our packages.
 	private final int packageID;
 	private Priority priority;
@@ -26,6 +27,7 @@ public abstract class Package implements Observable {
 	private final Address destinationAddress;
 	private ArrayList<Tracking> tracking;
 	private DrawPackage guiListener = null ;
+	private PropertyChangeSupport support; 
 	int customerId;
 	private synchronized static int setPackageID() {
 		return numOfPackages++;
@@ -47,9 +49,12 @@ public abstract class Package implements Observable {
 		this.tracking = new ArrayList<Tracking>();
 		this.packageID = 1000 + setPackageID();
 		this.status = Status.CREATION;
-		this.addTracking(c, Status.CREATION);
+		tracking.add(new Tracking(MainOffice.getClock(), c, Status.CREATION));
 		registerListener();
 		customerId = c.getCustomerId();
+		support = new PropertyChangeSupport(this);
+		addPropertyChangeListener(MainOffice.getInstance());
+		support.firePropertyChange("Created", null, this);
 	}
 
 	/**
@@ -64,7 +69,7 @@ public abstract class Package implements Observable {
 	void addTracking(Node node, Status status) {
 		Tracking newNode = new Tracking(MainOffice.getClock(), node, status);
 		tracking.add(newNode);
-
+		support.firePropertyChange("New Status", null, this);
 	}
 
 	/**
@@ -240,5 +245,13 @@ public abstract class Package implements Observable {
 	public DrawPackage getGuiListener() {
 		return guiListener;
 	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener pcl){ 	
+    	support.addPropertyChangeListener(pcl); 
+    } 
+    
+    public void removePropertyChangeListener(PropertyChangeListener pcl){ 	
+    	support.removePropertyChangeListener(pcl); 
+    } 
 }
 	

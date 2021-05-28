@@ -8,7 +8,7 @@ package components;
  * @version 1.0 -- 29.3.2021
  *
  */
-public interface Node {
+public interface Node{
 
 	/**
 	 * Generally, this function handles the receiving of a package by the object by

@@ -339,6 +339,18 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 
 	}
 
+	public static ArrayList<DrawBranch> getAllBranches() {
+		return allBranches;
+	}
+
+	public static ArrayList<DrawPackage> getAllPackages() {
+		return allPackages;
+	}
+
+	public static ArrayList<DrawTruck> getAllTrucks() {
+		return allTrucks;
+	}
+
 
 	
 }

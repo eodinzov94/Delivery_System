@@ -18,7 +18,7 @@ import GUI.Observable;
  * @see Node
  *
  */
-public class Branch implements Node, Runnable, Observable {
+public class Branch implements Node, Runnable, Observable,Cloneable {
 
 	static int numBranch = -1; // starts at -1, because HUB is created first.
 	private final int branchId;
@@ -407,4 +407,5 @@ public class Branch implements Node, Runnable, Observable {
 			listPackages.remove(p);
 		}
 	}
+	
 }

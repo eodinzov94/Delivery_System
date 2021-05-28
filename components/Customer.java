@@ -71,11 +71,12 @@ public class Customer implements Node ,Runnable{
 		packCreated++;
 	}
 	public void checkFinished() {
-		isFinished = true;
+		if(MainOffice.getInstance().checkIfAllPackagesDeliveredByCustomerId(id))
+			isFinished = true;
 	}
 	@Override
 	public void run() {
-		System.out.println(getNodeName() + "  started work");
+		System.out.println(getNodeName() + "  started create packages");
 		while(packCreated <5) {
 			try {
 				DeliveryGUI.pauser.look();
@@ -88,7 +89,7 @@ public class Customer implements Node ,Runnable{
 			try {
 				DeliveryGUI.pauser.look();
 				checkFinished();
-				Thread.sleep(10000);
+				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
 			}
 		}
@@ -104,7 +105,6 @@ public class Customer implements Node ,Runnable{
 
 	@Override
 	public void collectPackage(Package p) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -112,7 +112,7 @@ public class Customer implements Node ,Runnable{
 
 	@Override
 	public void deliverPackage(Package p) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -120,7 +120,7 @@ public class Customer implements Node ,Runnable{
 
 	@Override
 	public void work() {
-		// TODO Auto-generated method stub
+	
 		
 	}
 	public String getNodeName() {

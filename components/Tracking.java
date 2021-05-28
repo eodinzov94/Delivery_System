@@ -9,7 +9,8 @@ package components;
  *
  *
  */
-public class Tracking {
+public class Tracking implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
 	private int time;
 	private final Node node;
 	private Status status;

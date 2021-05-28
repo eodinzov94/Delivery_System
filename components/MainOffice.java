@@ -1,5 +1,11 @@
 package components;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -7,6 +13,16 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import GUI.DeliveryGUI;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+
+
+
 
 /**
  * This class represents the main office in the delivery system.
@@ -16,18 +32,26 @@ import GUI.DeliveryGUI;
  * @version 1.0 -- 29.3.2021
  *
  */
-public class MainOffice implements Runnable{
+public class MainOffice implements Runnable,PropertyChangeListener{
+	//Static fields
 	public static volatile MainOffice instance=null;
 	public static boolean isFinished;
+	public static final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+	public static final String filePath = new File("").getAbsolutePath()+"\\src\\components\\tracking.txt";
 	public static Random rand = new Random();
 	private static int clock = 0;
+	//Instance fields
 	private final int numOfPackages;
 	private Hub hub;
 	private Thread hubThread;
 	private Vector<Package> packages;
 	private ArrayList<Customer> customers;
 	private Executor executor;
-	
+	private FileWriter file;
+	private PrintWriter writer;
+	private BufferedReader reader;
+	private int lineNum;
+	//Methods or Functions
 	public static MainOffice getInstance() {
 		if (instance == null) {
             synchronized (MainOffice.class) {
@@ -37,6 +61,9 @@ public class MainOffice implements Runnable{
             }
         }
         return instance;
+	}
+	public void setMainOffice(State s) {
+		
 	}
 	/**
 	 * Constructor for the class MainOffice. Changed to double-checked singleton in part 3 of the project
@@ -51,7 +78,14 @@ public class MainOffice implements Runnable{
 	 *                        (and the hub) will have.
 	 * @param numOfPackages - integer representing how many packages will be generated in the simulation
 	 */
-	private MainOffice(int branches, int trucksForBranch, int numOfPackages) {		
+	private MainOffice(int branches, int trucksForBranch, int numOfPackages) {
+		lineNum = 1;
+		try {
+			file = new FileWriter(filePath);
+			writer = new PrintWriter(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		isFinished = false;
 		this.numOfPackages = numOfPackages;
 		Hub.resetHub();
@@ -108,6 +142,12 @@ public class MainOffice implements Runnable{
 		DeliveryGUI.getDeliveryGUI().getDisplay().run();
 		System.out.println("========================== STOP ==========================");
 		this.printReport();
+		try {
+			writer.close();
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -274,7 +314,48 @@ public class MainOffice implements Runnable{
 	public void run() {
 		play();
 	}
-	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		Package p = (Package)evt.getSource();
+		rwl.writeLock().lock();
+		writer.println(lineNum++ +":   "+"Sender ID: " +p.customerId+ " Package:"+ p.getPackageID() + " Status: " + p.getStatus());
+		writer.flush();
+		rwl.writeLock().unlock();
+	}
+	public boolean checkIfAllPackagesDeliveredByCustomerId(Integer customerId) {
+		int deliveredCounter =0;
+		try {
+			reader = new BufferedReader (new FileReader(filePath));
+		} catch (FileNotFoundException e1) {
+		}
+		rwl.readLock().lock();
+		String line = "";
+		try {
+			while(deliveredCounter<5 && (line=reader.readLine()) !=null) {
+				if(checkIfDeliveredInStringByCustomerId(line,"Sender ID: "+customerId.toString()))
+					deliveredCounter++;
+			}
+		} catch (IOException e) {
+		}
+		rwl.readLock().unlock();
+		try {
+			reader.close();
+		} catch (IOException e) {
+		}
+		return deliveredCounter == 5;
+	}
+	public boolean checkIfDeliveredInStringByCustomerId(String line, String customer) {
+		if(!line.contains(customer) || !line.contains("DELIVERED"))
+			return false;
+		return true;
+		
+	}
+	public ArrayList<Customer> getCustomers() {
+		return customers;
+	}
+	public int getLineNum() {
+		return lineNum;
+	}
 	
 
 }

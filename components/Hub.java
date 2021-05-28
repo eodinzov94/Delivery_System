@@ -155,9 +155,9 @@ public class Hub extends Branch implements Node {
 		synchronized (st) {
 			((StandardTruck) st).setDestination(this);
 			ArrayList<Package> copyOfListPackages;
-			synchronized(super.getListPackages()) {
-			 copyOfListPackages = new ArrayList<Package>(super.getListPackages());// prevents
-			}																					// ConcurrentModificationException
+			synchronized (super.getListPackages()) {
+				copyOfListPackages = new ArrayList<Package>(super.getListPackages());// prevents
+			} // ConcurrentModificationException
 			for (Package p : copyOfListPackages) {
 				if (p.getDestinationAddress().getZip() == branchId && !(p instanceof NonStandardPackage)) {
 					st.collectPackage(p);
@@ -166,11 +166,11 @@ public class Hub extends Branch implements Node {
 			((StandardTruck) st).setDestination(b);
 			st.setAvailable(false);
 			st.setTimeLeft(MainOffice.getRand().nextInt(11) + 1);
-			System.out.println(
-					st.getNodeName() + " is on it's way to " + b.getNodeName() + ", time to arrive: " + st.getTimeLeft());
+			System.out.println(st.getNodeName() + " is on it's way to " + b.getNodeName() + ", time to arrive: "
+					+ st.getTimeLeft());
 			st.notify();
 		}
-		nextBranch = (nextBranch+1) % branches.size();
+		nextBranch = (nextBranch + 1) % branches.size();
 		return true;
 	}
 
@@ -202,7 +202,7 @@ public class Hub extends Branch implements Node {
 	 * @deprecated as of part 2 of the project
 	 */
 	public boolean doesFit(NonStandardTruck t, NonStandardPackage p) {
-		return t.getHeight() >= p.getHeight() && t.getLength() >= p.getLength() && t.getWidth() >= p.getWidth(); 
+		return t.getHeight() >= p.getHeight() && t.getLength() >= p.getLength() && t.getWidth() >= p.getWidth();
 	}
 
 	/**
@@ -210,7 +210,8 @@ public class Hub extends Branch implements Node {
 	 * <p>
 	 * The function searches the current list of packages in the hub. If such exist,
 	 * it searches for an available Truck to complete the task. Once a Truck has
-	 * been found - the function handles all the appropriate stages of delivery by using notify() method.
+	 * been found - the function handles all the appropriate stages of delivery by
+	 * using notify() method.
 	 * 
 	 * The hub handles all types of packages, including NonStandard.
 	 * <p>
@@ -234,24 +235,28 @@ public class Hub extends Branch implements Node {
 			}
 		}
 	}
+
 	/**
 	 * Getter for field 'branchesThreads'
+	 * 
 	 * @return branchesThreads - ArrayList<Thread>
 	 */
 	public ArrayList<Thread> getBranchesThreads() {
 		return branchesThreads;
 	}
+
 	/**
-	 * This method adding new brunch to array list of branches , 
-	 * and also adding Thread that executes that branch in future.
+	 * This method adding new brunch to array list of branches , and also adding
+	 * Thread that executes that branch in future.
 	 */
 	public void addBranch(Branch b) {
 		branches.add(b);
 		branchesThreads.add(new Thread(b));
 	}
+
 	/**
-	 * Starter for all branches Threads
-	 * basically starts all threads that executes branches
+	 * Starter for all branches Threads basically starts all threads that executes
+	 * branches
 	 * 
 	 */
 	public void startAllBranches() {
@@ -259,6 +264,15 @@ public class Hub extends Branch implements Node {
 		for (Thread t : branchesThreads) {
 			t.start();
 		}
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Object clone = null;
+		clone = super.clone();
+		for(Truck t:this.getListTrucks())
+			((Branch)clone).getListTrucks().add((Truck) t.clone());
+		return clone;
 	}
 
 }

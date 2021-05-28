@@ -2,10 +2,15 @@ package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+
+
 import javax.swing.*;
 
 import components.Hub;
 import components.MainOffice;
+import components.Originator;
 import components.Pauser;
 
 /**
@@ -30,7 +35,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	public final static Pauser pauser = new Pauser();
 	static private DeliveryGUI frame = null;
 	private Thread gameThread = null;
-	private MainOffice game = null;
+	private boolean isGameStarted = false;
 	private boolean isClickedBranchInfo = false;
 	private boolean isCreated = false;
 	private JMenuBar mainMenu;
@@ -39,6 +44,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	private JScrollPane tableContainerAllPackages;
 	private JScrollPane tableContainerBranchPackages;
 	private boolean isClickedPackageInfo = false;
+	private int numOfBranches;
 
 	/**
 	 * This function returns a DeliveryGUI object- a new one if none exist, or the current object if one was initialized already.
@@ -70,6 +76,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		displayThread = new Thread(display);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		revalidate();
+		numOfBranches = 5;
 	}
 
 	/**
@@ -87,6 +94,9 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		setNewMenuItem("Resume");
 		setNewMenuItem("All packages info");
 		setNewMenuItem("Branch info");
+		setNewMenuItem("Clone branch");
+		setNewMenuItem("Restore");
+		setNewMenuItem("Report");
 	}
 
 	/**
@@ -106,11 +116,11 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		JButton source = (JButton) e.getSource();
 		String bName = source.getText();
 		if (bName.equals("Create system") && !isCreated) { // 'Create System' was selected, initialize a new CreateSystemDialog object.
-			new CreateSystemDialog();
-			game = null;
-		} else if (bName.equals("Start") && isCreated && game == null) {  // 'Start' was selected, if a system was created- start the system simulation.
+			getDisplay().createDisplay();
+			setCreated(true);
+		} else if (bName.equals("Start") && isCreated && !isGameStarted) {  // 'Start' was selected, if a system was created- start the system simulation.
 			this.startApp();
-		} else if (game == null) {
+		} else if (MainOffice.getInstance() == null) {
 			return;
 		} else if (bName.equals("Stop")) { // 'Stop' was selected, suspend all threads.
 			stopAllThreads();
@@ -135,8 +145,24 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			}
 
 		}
+		else if(bName.equals("Report")) {
+			File file = new File(MainOffice.filePath);
+			try {
+				Desktop.getDesktop().edit(file);
+			} catch (IOException e1) {
+			}
+		}
+		else if(bName.equals("Clone branch") && numOfBranches < 9) {
+			Originator.createState();
+			numOfBranches++;
+			//TODO:CLONE IT SELF
+		}
+		else if(bName.equals("Restore")&& numOfBranches >5) {
+			Originator.setState();
+			numOfBranches--;
+		}
 	}
-
+	
 	/**
 	 * Helper function, creates an info table to display all the packages info on the screen.
 	 * <p>
@@ -147,7 +173,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 
 		JTable packagesTable = new JTable(AllPackagesData.setDataForAllPackages(), AllPackagesData.column);
 		tableContainerAllPackages = new JScrollPane(packagesTable);
-		tableContainerAllPackages.setBounds(0, 0, 500, 23 + 16 * game.getPackages().size());
+		tableContainerAllPackages.setBounds(0, 0, 500, 23 + 16 * MainOffice.getInstance().getPackages().size());
 		display.add(tableContainerAllPackages, JLayeredPane.POPUP_LAYER);
 	}
 	
@@ -193,10 +219,9 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	 * @see MainOffice
 	 */ 
 	public void startApp() {
-	//	game = MainOffice.getInstance(display.getNumBranches(), display.getNumTrucks(), display.getNumPackages()); //TODO: Figure out
-		game= MainOffice.getInstance();
-		gameThread = new Thread(game);
+		gameThread = new Thread(MainOffice.getInstance());
 		gameThread.start();
+		isGameStarted = true;
 	}
 
 	/**
@@ -236,17 +261,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	public void resumeAllThreads() {
 		pauser.resume();
 	}
-
-	/**
-	 * Get function for the field 'game'
-	 * 
-	 * @return game - MainOffice
-	 * 
-	 */
-	public MainOffice getGame() {
-		return game;
-	}
-
 	/**
 	 * Get function for the field 'isCreated'
 	 * 
