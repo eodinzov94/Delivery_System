@@ -27,6 +27,9 @@ public abstract class Package implements Observable {
 	private ArrayList<Tracking> tracking;
 	private DrawPackage guiListener = null ;
 	int customerId;
+	private synchronized static int setPackageID() {
+		return numOfPackages++;
+	}
 
 	/**
 	 * Constructor for the class StandardPackage.
@@ -42,7 +45,7 @@ public abstract class Package implements Observable {
 		this.senderAddress = senderAddress;
 		this.destinationAddress = destinationAdress;
 		this.tracking = new ArrayList<Tracking>();
-		this.packageID = 1000 + (numOfPackages++);
+		this.packageID = 1000 + setPackageID();
 		this.status = Status.CREATION;
 		this.addTracking(c, Status.CREATION);
 		registerListener();

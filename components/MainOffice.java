@@ -3,7 +3,9 @@ package components;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
-
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import GUI.DeliveryGUI;
 
 /**
@@ -24,7 +26,7 @@ public class MainOffice implements Runnable{
 	private Thread hubThread;
 	private Vector<Package> packages;
 	private ArrayList<Customer> customers;
-
+	private Executor executor;
 	
 	public static MainOffice getInstance() {
 		if (instance == null) {
@@ -72,6 +74,7 @@ public class MainOffice implements Runnable{
 		customers = new ArrayList<Customer>();
 		for(int i=0; i<10;i++)
 			customers.add(new Customer());
+		executor = Executors.newFixedThreadPool(2);
 	}
 
 	/**
@@ -101,9 +104,11 @@ public class MainOffice implements Runnable{
 			}
 		}
 		isFinished = true;
+		((ExecutorService) executor).shutdown();
 		DeliveryGUI.getDeliveryGUI().getDisplay().run();
 		System.out.println("========================== STOP ==========================");
 		this.printReport();
+
 	}
 
 	/**
@@ -255,7 +260,7 @@ public class MainOffice implements Runnable{
 			b.startAllTrucks();
 		}
 		for (Customer c: customers){
-			c.start();
+			executor.execute(c);
 		}
 		hub.startAllBranches();
 		hub.startAllTrucks();

@@ -2,7 +2,7 @@ package components;
 
 import GUI.DeliveryGUI;
 
-public class Customer extends Thread implements Node{
+public class Customer implements Node ,Runnable{
 	private static int idCounter = 0;
 	private Address add;
 	private int id;
@@ -71,10 +71,11 @@ public class Customer extends Thread implements Node{
 		packCreated++;
 	}
 	public void checkFinished() {
-		
+		isFinished = true;
 	}
 	@Override
 	public void run() {
+		System.out.println(getNodeName() + "  started work");
 		while(packCreated <5) {
 			try {
 				DeliveryGUI.pauser.look();
