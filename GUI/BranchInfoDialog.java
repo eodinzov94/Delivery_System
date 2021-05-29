@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
 import components.Hub;
+import components.MainOffice;
 /**
  * This class encompasses the logic behind the 'Branch Info' button featured on the system functionality tray.
  * <p>
@@ -75,7 +76,7 @@ public class BranchInfoDialog implements ActionListener{
 	private void setJComboBox() {
 		branchChoices = new JComboBox<String>();
 		branchChoices.addItem("Sorting center");
-		int numBranches = Hub.getHub().getBranches().size();
+		int numBranches = MainOffice.getInstance().getHub().getBranches().size();
 		for(int i=0;i<numBranches ;i++) 
 			branchChoices.addItem("Branch "+ (i+1));
 		infoDialog.add(branchChoices);

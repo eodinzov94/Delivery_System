@@ -156,7 +156,7 @@ public class Van extends Truck {
 	public void deliverPackage(Package p) {
 		if (p.getStatus().equals(Status.COLLECTION)) {
 			p.setStatus(Status.BRANCH_STORAGE);
-			Branch origin = Hub.getHub().findBranchById(p.getSenderAddress().getZip());
+			Branch origin = MainOffice.getInstance().getHub().findBranchById(p.getSenderAddress().getZip());
 			p.addTracking(origin, Status.BRANCH_STORAGE);
 			System.out.println("Van " + super.getTruckID() + " has collected package " + p.getPackageID()
 					+ " ,and arrived back to branch " + p.getSenderAddress().getZip());

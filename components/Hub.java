@@ -8,23 +8,20 @@ import GUI.DrawTruck;
 /**
  * This class represents the hub in the delivery system.
  * <p>
- * This class was implemented as a Singleton both because there is only a single
- * hub per each main office, and also because we needed access to the hub object
- * itself for various functions throughout the implementation.
+ * The class is no longer a singleton since version 3.0 due to cloning reasons.
+ * 
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 1.0 -- 29.3.2021
+ * @version 3.0 -- 10.6.2021
  * @see Node
  * @see Branch
  *
  */
 public class Hub extends Branch implements Node {
 
-	// Singleton class!
 
 	private ArrayList<Branch> branches;
 	private ArrayList<Thread> branchesThreads;
-	private static Hub single_instance = null;
 	private static int nextBranch = 0;
 
 	/**
@@ -32,36 +29,20 @@ public class Hub extends Branch implements Node {
 	 * <p>
 	 * Access is private because the class was implemented as a Singleton.
 	 */
-	private Hub() {
+	public Hub() {
 		super("HUB");
 		branches = new ArrayList<Branch>();
 		branchesThreads = new ArrayList<Thread>();
 		System.out.println("Creating " + super.toString());
 	}
 
-	public static void resetHub() {
-		single_instance = null;
-		Branch.numBranch = -1;
+	public void resetHub() {
 		Truck.numTrucks = 0;
 		Package.numOfPackages = 0;
 		DrawPackage.numOfPackages = 0;
 		DrawTruck.numTrucks = 0;
 	}
 
-	/**
-	 * Get function for the hub object.
-	 * <p>
-	 * In case that a hub instance hasn't been initialized, this function
-	 * initializes a new instance. Otherwise, it returns the existing instance.
-	 * 
-	 * @return the Hub instance.
-	 */
-	public static Hub getHub() {
-		if (single_instance == null)
-			single_instance = new Hub();
-
-		return single_instance;
-	}
 
 	/**
 	 * Implementation of the 'getName' function in the Node interface
@@ -149,7 +130,7 @@ public class Hub extends Branch implements Node {
 			return false;
 		Branch b = findBranchById(branchId);
 		if (b == null) {
-			System.out.println("Invalid branch ID");
+			System.out.println("Invalid branch ID: " + String.valueOf(branchId));
 			return false;
 		}
 		synchronized (st) {
@@ -266,13 +247,13 @@ public class Hub extends Branch implements Node {
 		}
 	}
 
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		Object clone = null;
-		clone = super.clone();
-		for(Truck t:this.getListTrucks())
-			((Branch)clone).getListTrucks().add((Truck) t.clone());
-		return clone;
-	}
+//	@Override
+//	protected Object clone() throws CloneNotSupportedException {
+//		Object clone = null;
+//		clone = super.clone();
+//		for(Truck t:this.getListTrucks())
+//			((Branch)clone).getListTrucks().add((Truck) t.clone());
+//		return clone;
+//	}
 
 }

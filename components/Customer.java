@@ -10,9 +10,9 @@ public class Customer implements Node ,Runnable{
 	private int packCreated = 0;
 	
 	
-	public Customer() {
-		super();
-		add = new Address(MainOffice.getRand().nextInt(Hub.getHub().getBranches().size()), MainOffice.getRand().nextInt(999999 - 100000) + 100000);
+	public Customer(int branchSize) {
+		System.out.println(branchSize);
+		add = new Address(MainOffice.getRand().nextInt(branchSize), MainOffice.getRand().nextInt(999999 - 100000) + 100000);
 		id = ++idCounter;
 	}
 	

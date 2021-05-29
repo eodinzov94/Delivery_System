@@ -65,9 +65,9 @@ public class AllPackagesData{
 		//receive system information
 		Vector<Package> packages;
 		if(branchId == hubIndex)
-			packages= Hub.getHub().getListPackages();
+			packages= MainOffice.getInstance().getHub().getListPackages();
 		else
-			packages = Hub.getHub().getBranches().get(branchId).getListPackages();
+			packages = MainOffice.getInstance().getHub().getBranches().get(branchId).getListPackages();
 		int numPackages = packages.size();
 		Package temp;
 		String[][] data = new String[numPackages][];

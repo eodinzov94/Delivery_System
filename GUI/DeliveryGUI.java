@@ -204,9 +204,9 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		tableContainerBranchPackages = new JScrollPane(packagesTable);
 		int step;
 		if(branchId == -1) // hub was selected
-			step =23+ 16* Hub.getHub().getListPackages().size();
+			step =23+ 16* MainOffice.getInstance().getHub().getListPackages().size();
 		else { // a branch was selected
-			step =23+ 16* Hub.getHub().getBranches().get(branchId).getListPackages().size();
+			step =23+ 16* MainOffice.getInstance().getHub().getBranches().get(branchId).getListPackages().size();
 		}
 		tableContainerBranchPackages.setBounds(500, 0, 500, step);
 		display.add(tableContainerBranchPackages, JLayeredPane.POPUP_LAYER);

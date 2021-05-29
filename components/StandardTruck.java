@@ -195,7 +195,7 @@ public class StandardTruck extends Truck {
 				loadPackagesFromBranch();
 				System.out.println(
 						"StandardTruck " + super.getTruckID() + " loaded packages at " + destination.getNodeName());
-				this.destination = Hub.getHub();
+				this.destination = MainOffice.getInstance().getHub();
 				super.setTimeLeft(MainOffice.getRand().nextInt(6) + 1);
 				System.out.println("StandardTruck " + super.getTruckID()
 						+ " is on it's way to the HUB, time to arrive: " + super.getTimeLeft());

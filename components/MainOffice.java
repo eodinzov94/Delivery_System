@@ -79,6 +79,9 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 * @param numOfPackages - integer representing how many packages will be generated in the simulation
 	 */
 	private MainOffice(int branches, int trucksForBranch, int numOfPackages) {
+		Branch.numBranch = -1;
+		hub = new Hub();
+		hub.resetHub();
 		lineNum = 1;
 		try {
 			file = new FileWriter(filePath);
@@ -88,8 +91,7 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		}
 		isFinished = false;
 		this.numOfPackages = numOfPackages;
-		Hub.resetHub();
-		hub = Hub.getHub();
+
 		hub.addTruck("NonStandardTruck");
 		for (int i = 0; i < trucksForBranch; i++) {
 			hub.addTruck("StandardTruck");
@@ -107,7 +109,7 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		hubThread = new Thread(hub);
 		customers = new ArrayList<Customer>();
 		for(int i=0; i<10;i++)
-			customers.add(new Customer());
+			customers.add(new Customer(branches));
 		executor = Executors.newFixedThreadPool(2);
 	}
 
@@ -355,6 +357,9 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	}
 	public int getLineNum() {
 		return lineNum;
+	}
+	public Hub getHub() {
+		return hub;
 	}
 	
 

@@ -12,7 +12,7 @@ import GUI.DrawPath;
 import GUI.DrawTruck;
 
 public class State {
-	int clock;
+	public int clock;
 	public Hub hub;
 	public Vector<Package> packages;
 	public ArrayList<Customer> customers;
@@ -22,7 +22,8 @@ public class State {
 	public ArrayList<DrawTruck> allDrawTrucks;
 	public Vector<DrawPath> drawPaths;
 	public State() {
-		hub = (Hub) Hub.getHub().clone();
+		clock = (int) MainOffice.getClock();
+		//hub = (Hub) Hub.getHub().clone();
 		packages = (Vector<Package>) MainOffice.getInstance().getPackages().clone();
 		customers = (ArrayList<Customer>) MainOffice.getInstance().getCustomers().clone();
 		allDrawBranches = (ArrayList<DrawBranch>) DisplayPanel.getAllBranches().clone();
