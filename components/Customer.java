@@ -86,6 +86,8 @@ public class Customer implements Node, Runnable {
 	@Override
 	public void run() {
 		System.out.println(getNodeName() + "  started create packages");
+		if(packCreated==5 && isFinished)
+			return;
 		while (packCreated < 5) {
 			try {
 				DeliveryGUI.pauser.look();

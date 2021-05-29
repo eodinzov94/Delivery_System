@@ -155,7 +155,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		else if(bName.equals("Clone branch") && numOfBranches < 8) {
 			stopAllThreads();
 			try {
-				Thread.sleep(20L);
+				Thread.sleep(600L);
 			} catch (InterruptedException e1) {
 			}
 			Originator.createState();
@@ -167,7 +167,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		else if(bName.equals("Restore")&& numOfBranches >5) {
 			stopAllThreads();
 			try {
-				Thread.sleep(20L);
+				Thread.sleep(600L);
 			} catch (InterruptedException e1) {
 			}
 			Originator.setState();

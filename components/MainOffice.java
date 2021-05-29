@@ -310,16 +310,14 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		startCustomers();
 		hub.startAllBranches();
 		hub.startAllTrucks();
-		hubThread.start();
-			
 	}
 	public void resetThreads() {
 		for (Branch b:hub.getBranches()) {
 			b.restoreTrucks();
-			resetCustomers();
-			hub.restoreTrucks();
-			hub.restartAllBranches();
 		}
+		resetCustomers();
+		hub.restoreTrucks();
+		hub.restartAllBranches();
 	}
 	
 	/**
