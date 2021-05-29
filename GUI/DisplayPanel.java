@@ -6,6 +6,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import components.MainOffice;
+import components.State;
 
 /**
  * This class represents the panel on the GUI where the Delivery System is displayed in real time. 
@@ -23,7 +24,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private boolean isHidden;
-	int numBranches = 5, numPackages = 8, numTrucks = 5;
+	int numBranches = 8, numPackages = 50, numTrucks = 5;
 	static private ArrayList<DrawBranch> allBranches;
 	static private ArrayList<DrawPackage> allPackages;
 	static private ArrayList<DrawTruck> allTrucks;
@@ -75,7 +76,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	private void initPackages() {
 		allPackages = new ArrayList<DrawPackage>();
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < numPackages; i++) {
 			Point location = new Point(100 + i * 33, 15);
 			allPackages.add(new DrawPackage(location));
 		}
@@ -108,10 +109,15 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		allBranches.add(new DrawHub(-1));
 		for (int i = 0; i < numBranches; i++) {
 			Point start = new Point(30, 70 + i * branchesStep());
-			Point pEnd = new Point(1800, 300 + i * hubLinesStep());
+			Point pEnd = new Point(1800, 310 + i * hubLinesStep());
 			Point pStart = new Point(70, 85 + i * branchesStep());
 			DrawPath dp = new DrawPath(pStart, pEnd, DrawHub.getHubColor());
-			allBranches.add(new DrawBranch(start, dp, i));
+			DrawBranch db = new DrawBranch(start, dp, i);
+			allBranches.add(db);
+			if(i>4) {
+				dp.isHidden = true;
+				db.isHidden = true;
+			}
 		}
 	}
 
@@ -171,7 +177,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	 */
 	public int branchesStep() {
 		if (numBranches > 1)
-			return 450 / (numBranches - 1);
+			return 450 /5;
 		return 450;
 	}
 
@@ -193,7 +199,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	 */
 	public int hubLinesStep() {
 		if (numBranches > 1)
-			return 160 / (numBranches - 1);
+			return 160 / (7);
 		return 160;
 	}
 
@@ -351,6 +357,14 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		return allTrucks;
 	}
 
+	public  void setState(State s) {
+		allBranches = s.allDrawBranches;
+		allPackages = s.allDrawPackages;
+		allTrucks = s.allDrawTrucks;
+		paths = s.drawPaths;
+		repaint();
+	}
 
+	
 	
 }

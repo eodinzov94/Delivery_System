@@ -18,7 +18,7 @@ import GUI.Observable;
  *
  *
  */
-public abstract class Truck implements Node, Runnable, Observable {
+public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 	public static int numTrucks = 0; // running static integer that helps number our trucks.
 	private int truckID;
 	private String licensePlate;
@@ -293,9 +293,43 @@ public abstract class Truck implements Node, Runnable, Observable {
 				work();
 				Thread.sleep(500L);
 			} catch (InterruptedException e) {
+				return;
 			}
 		}
 		System.out.println(this.getNodeName() + " Is finished work!");
 	}
 
+	@Override
+	public void collectPackage(Package p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deliverPackage(Package p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void work() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	public void linkPackages() {
+		for (Package p: this.packages) {
+			for(Package origin: MainOffice.getInstance().getPackages()) {
+				if(p.equals(origin)) {
+					p = origin;
+					break;
+				}
+			}
+	
+		}
+	}
 }

@@ -2,11 +2,11 @@ package components;
 
 import java.util.ArrayList;
 import java.util.Vector;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+
 
 import GUI.DisplayPanel;
 import GUI.DrawBranch;
+import GUI.DrawHub;
 import GUI.DrawNonStandardTruck;
 import GUI.DrawPackage;
 import GUI.DrawPath;
@@ -24,8 +24,11 @@ public class State {
 	public ArrayList<DrawPackage> allDrawPackages;
 	public ArrayList<DrawTruck> allDrawTrucks;
 	public Vector<DrawPath> drawPaths;
-
+	public int numTrucks,numOfPackages,numDrawTrucks;
 	public State() {
+		numTrucks = Truck.numTrucks ;
+		numOfPackages = Package.numOfPackages;
+		numDrawTrucks = DrawTruck.numTrucks;
 		clock = (int) MainOffice.getClock();
 		hub = new Hub(MainOffice.getInstance().getHub());
 		packages = new Vector<Package>();
@@ -43,7 +46,10 @@ public class State {
 		}
 		allDrawBranches = new ArrayList<DrawBranch>();
 		for (DrawBranch b : DisplayPanel.getAllBranches()) {
-			allDrawBranches.add(new DrawBranch(b));
+			if( b instanceof DrawHub)
+				allDrawBranches.add(b);
+			else
+				allDrawBranches.add(new DrawBranch(b));
 		}
 		allDrawPackages = new ArrayList<DrawPackage>();
 		for (DrawPackage p : DisplayPanel.getAllPackages()) {

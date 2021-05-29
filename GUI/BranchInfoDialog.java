@@ -11,7 +11,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
-import components.Hub;
 import components.MainOffice;
 /**
  * This class encompasses the logic behind the 'Branch Info' button featured on the system functionality tray.

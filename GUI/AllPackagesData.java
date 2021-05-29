@@ -3,7 +3,7 @@ package GUI;
 
 import java.util.Vector;
 
-import components.Hub;
+
 import components.MainOffice;
 import components.Package;
 /**

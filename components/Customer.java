@@ -38,7 +38,7 @@ public class Customer implements Node, Runnable {
 		type = MainOffice.getRand().nextInt(3);
 		priorityId = MainOffice.getRand().nextInt(3);
 		Address dAdd;
-		dAdd = new Address(MainOffice.getRand().nextInt(Branch.numBranch),
+		dAdd = new Address(MainOffice.getRand().nextInt(MainOffice.getInstance().getHub().getBranches().size()),
 				MainOffice.getRand().nextInt(999999 - 100000) + 100000);
 		switch (priorityId) {
 		case 0:
@@ -90,8 +90,10 @@ public class Customer implements Node, Runnable {
 			try {
 				DeliveryGUI.pauser.look();
 				createPackage();
+				System.out.println(getNodeName() + "  created package");
 				Thread.sleep((MainOffice.getRand().nextInt(4) + 2) * 1000);
 			} catch (InterruptedException ignored) {
+				return;
 			}
 		}
 		while (!isFinished) {
@@ -100,6 +102,7 @@ public class Customer implements Node, Runnable {
 				checkFinished();
 				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
+				return;
 			}
 		}
 	}

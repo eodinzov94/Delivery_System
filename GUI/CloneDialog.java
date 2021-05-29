@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
-import components.Hub;
+
 import components.MainOffice;
 /**
  * This class encompasses the logic behind the 'Clone Branch' button featured on the system functionality tray.
@@ -87,8 +87,10 @@ public class CloneDialog implements ActionListener{
 		if(bName.equals("OK")) { 
 			
 			try {
-				MainOffice.getInstance().getHub().cloneBranch(branchChoices.getSelectedIndex()-1);
-			} catch (Exception ignored) {
+				MainOffice.getInstance().getHub().cloneBranch(branchChoices.getSelectedIndex());
+				
+			} catch (Exception e1) {
+				System.out.println(e1);
 			}
 			infoDialog.dispose();
 		}

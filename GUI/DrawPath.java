@@ -18,7 +18,7 @@ import java.awt.Graphics;
 public class DrawPath extends DrawObject {
 	Point start;
 	Point end;
-
+	boolean isHidden;
 	/**
 	 * Constructor function for the class.
 	 * 
@@ -32,7 +32,7 @@ public class DrawPath extends DrawObject {
 		this.start = start;
 		this.end = end;
 		this.setColor(c);
-
+		isHidden = false;
 	}
 
 	/**
@@ -102,7 +102,18 @@ public class DrawPath extends DrawObject {
 	 * @param g - Graphics object
 	 */
 	public void paintComponent(Graphics g) {
+		if(isHidden)
+			return;
 		g.setColor(this.getColor());
 		g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
 	}
+
+	public boolean isHidden() {
+		return isHidden;
+	}
+
+	public void setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
+	
 }

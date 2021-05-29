@@ -63,7 +63,11 @@ public class MainOffice implements Runnable,PropertyChangeListener{
         return instance;
 	}
 	public void setMainOffice(State s) {
-		
+		setClock(s.clock);
+		setPackages(s.packages);
+		setCustomers(s.customers);
+		setLineNum(s.lineNum);
+		hub.setHub(s.hub);
 	}
 	/**
 	 * Constructor for the class MainOffice. Changed to double-checked singleton in part 3 of the project
@@ -236,6 +240,8 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 */
 	public void setPackages(Vector<Package> packages) {
 		this.packages = packages;
+		for(Package p:packages)
+			p.registerListener();
 	}
 
 	/**
@@ -301,32 +307,37 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		for (Branch b:hub.getBranches()) {
 			b.startAllTrucks();
 		}
-		for (Customer c: customers){
-			executor.execute(c);
-		}
+		startCustomers();
 		hub.startAllBranches();
 		hub.startAllTrucks();
 		hubThread.start();
 			
 	}
-	
-	@SuppressWarnings("deprecation")
-	private void killAllThreads() {
-//		DeliveryGUI.getDeliveryGUI().killDisplayThread();
-//		for (Branch b:hub.getBranches()) {
-//			b.killAllTrucks();
-//		}
-//		((ExecutorService)executor).shutdownNow();
-//		hub.killAllBranches();
-//		hub.killAllTrucks();
-//		hubThread.stop();
+	public void resetThreads() {
+		for (Branch b:hub.getBranches()) {
+			b.restoreTrucks();
+			resetCustomers();
+			hub.restoreTrucks();
+			hub.restartAllBranches();
+		}
 	}
+	
 	/**
 	 * This method implements Runnable interface. 
 	 * just used to run a play() method in Thread.
 	 */
 	public void run() {
 		play();
+	}
+	public void startCustomers() {
+		for (Customer c: customers){
+			executor.execute(c);
+		}
+	}
+	public void resetCustomers() {
+		((ExecutorService) executor).shutdownNow();
+		executor = Executors.newFixedThreadPool(2);
+		startCustomers();
 	}
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -372,6 +383,21 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	}
 	public Hub getHub() {
 		return hub;
+	}
+	public void setHub(Hub hub) {
+		this.hub = hub;
+	}
+	public void setHubThread(Thread hubThread) {
+		this.hubThread = hubThread;
+	}
+	public void setCustomers(ArrayList<Customer> customers) {
+		this.customers = customers;
+	}
+	public void setLineNum(int lineNum) {
+		this.lineNum = lineNum;
+	}
+	public static void setClock(int clock) {
+		MainOffice.clock = clock;
 	}
 	
 

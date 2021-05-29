@@ -2,6 +2,9 @@ package components;
 
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import GUI.DeliveryGUI;
 import GUI.DisplayPanel;
@@ -18,16 +21,16 @@ import GUI.Observable;
  * @see Node
  *
  */
-public class Branch implements Node, Runnable, Observable,Cloneable {
+public class Branch implements Node, Runnable, Observable, Cloneable {
 
 	static int numBranch = -1; // starts at -1, because HUB is created first.
 	private int branchId;
 	private String branchName;
 	private ArrayList<Truck> listTrucks;
 	private Vector<Package> listPackages;
-	private ArrayList<Thread> truckThreads;
+	
 	DrawBranch guiListener = null;
-
+	private Executor executor;
 	/**
 	 * Constructor for the class Branch.
 	 * <p>
@@ -39,19 +42,18 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 		this.branchName = "Branch " + branchId;
 		this.listTrucks = new ArrayList<Truck>();
 		this.listPackages = new Vector<Package>();
-		this.truckThreads = new ArrayList<Thread>();
 		System.out.println("Creating " + this);
 		registerListener();
+		executor = Executors.newCachedThreadPool();
 	}
 
-	
 	public Branch(Branch other) {
 		this.branchId = other.getBranchId();
 		this.branchName = "Branch " + branchId;
-		this.truckThreads = new ArrayList<Thread>();
+		this.executor = Executors.newCachedThreadPool();
 		this.listTrucks = new ArrayList<Truck>();
-		for(Truck t: other.getListTrucks()) {
-			if( t instanceof Van)
+		for (Truck t : other.getListTrucks()) {
+			if (t instanceof Van)
 				listTrucks.add(new Van(t));
 			else if (t instanceof StandardTruck)
 				listTrucks.add(new StandardTruck(t));
@@ -59,20 +61,18 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 				listTrucks.add(new NonStandardTruck(t));
 		}
 		this.listPackages = new Vector<Package>();
-		for(Package p: other.getListPackages()) {
-			if( p instanceof SmallPackage)
+		for (Package p : other.getListPackages()) {
+			if (p instanceof SmallPackage)
 				listPackages.add(new SmallPackage(p));
-			else if( p instanceof StandardPackage)
+			else if (p instanceof StandardPackage)
 				listPackages.add(new StandardPackage(p));
-			else if( p instanceof NonStandardPackage)
+			else if (p instanceof NonStandardPackage)
 				listPackages.add(new NonStandardPackage(p));
 		}
 		System.out.println("Copying " + this);
 		registerListener();
 	}
-	
 
-	
 	/**
 	 * Get function for the field 'listTrucks'
 	 * 
@@ -185,7 +185,7 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 		this.branchName = branchName;
 		this.listTrucks = new ArrayList<Truck>();
 		this.listPackages = new Vector<Package>();
-		this.truckThreads = new ArrayList<Thread>();
+		executor = Executors.newCachedThreadPool();
 		registerListener();
 	}
 
@@ -199,7 +199,7 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 	 * @param p - A package to add to the current list of packages.
 	 */
 	public void collectPackage(Package p) {
-			addPackage(p);
+		addPackage(p);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 	 * @param p - A package to remove from the current list of packages.
 	 */
 	public void deliverPackage(Package p) {
-			removePackage(p);
+		removePackage(p);
 	}
 
 	/**
@@ -233,10 +233,12 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 	 * The function searches the current list of packages in the branch. If such
 	 * exist, it searches for an available Van to complete the task. Once a Van has
 	 * been found - the function handles both the 'picking up from sender' and
-	 * 'delivering to recipient' tasks using the Van it found 
-	 *  after all Van instance's variables manipulations are done, sends notify signal to responsible thread to start Van's work.
+	 * 'delivering to recipient' tasks using the Van it found after all Van
+	 * instance's variables manipulations are done, sends notify signal to
+	 * responsible thread to start Van's work.
 	 * <p>
-	 *  When unit of work is done this function also using alert function to update the GUI state represented in DrawBranch class
+	 * When unit of work is done this function also using alert function to update
+	 * the GUI state represented in DrawBranch class
 	 *
 	 * @see DrawBranch
 	 * @see Van
@@ -267,6 +269,7 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 	 * This function is an extension for work().
 	 * <p>
 	 * it calls each of the branches' Vans' work() function.
+	 * 
 	 * @deprecated as a part of HW2
 	 */
 	public void workTrucks() {
@@ -305,15 +308,16 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 			break;
 		}
 		listTrucks.add(t);
-		addTruckThread(t);
+		
 	}
 
 	/**
-	 * This function implements 'Observable' interface inspired by Listener-Observer that we learned 
-	 * in classroom. 
-	 * Function alerts the 'DrawBranch' instance that something changed
-	 * to represent the changes in GUI namely in DisplayPanel when repainting new frame
+	 * This function implements 'Observable' interface inspired by Listener-Observer
+	 * that we learned in classroom. Function alerts the 'DrawBranch' instance that
+	 * something changed to represent the changes in GUI namely in DisplayPanel when
+	 * repainting new frame
 	 * <p>
+	 * 
 	 * @see Listener
 	 * @see Observable
 	 * @see DrawBranch
@@ -326,14 +330,17 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 		}
 
 	}
+
 	/**
-	 * This function implements 'Observable' interface inspired by Listener-Observer that we learned 
-	 * in classroom. 
-	 * Function using search method from Display panel to find matching DrawBranch instance with same ID
-	 * to store the reference of DrawBranch instance which represents the Branch in a GUI.
-	 * It is important to note that such instance will always exist since the all GUI and "Pseudo - Backend " objects are initialized exactly in the same order.
-	 * where components package represents "pseudo backend" and GUI package represents frontend
+	 * This function implements 'Observable' interface inspired by Listener-Observer
+	 * that we learned in classroom. Function using search method from Display panel
+	 * to find matching DrawBranch instance with same ID to store the reference of
+	 * DrawBranch instance which represents the Branch in a GUI. It is important to
+	 * note that such instance will always exist since the all GUI and "Pseudo -
+	 * Backend " objects are initialized exactly in the same order. where components
+	 * package represents "pseudo backend" and GUI package represents frontend
 	 * <p>
+	 * 
 	 * @see Listener
 	 * @see Observable
 	 * @see DrawBranch
@@ -347,31 +354,36 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 		}
 
 	}
+
 	/**
 	 * This method checks if there is any package stored in a branch.
 	 * <p>
-	 * this method used by guiListener ( DrawBranch instance) to set matching color state.
-	 * this method also synchronized to prevent ConcurrentModificationException, because default Iterator is not thread safe 
+	 * this method used by guiListener ( DrawBranch instance) to set matching color
+	 * state. this method also synchronized to prevent
+	 * ConcurrentModificationException, because default Iterator is not thread safe
+	 * 
 	 * @return true if stores any packages , otherwise false.
 	 * @see DrawBranch
 	 * 
 	 */
 	public boolean storesPackages() {
-		synchronized(listPackages) {
-		for (Package p : listPackages) {
-			if (p.getStatus().equals(Status.BRANCH_STORAGE) || p.getStatus().equals(Status.DELIVERY))
-				return true;
-		}
+		synchronized (listPackages) {
+			for (Package p : listPackages) {
+				if (p.getStatus().equals(Status.BRANCH_STORAGE) || p.getStatus().equals(Status.DELIVERY))
+					return true;
+			}
 		}
 		return false;
 	}
 
 	/**
-	 * This method implements Runnable interface. 
-	 * Represents Branch work / Hub work (as inherited method), runs while there is at least one package to deliver, 
-	 * then checks the system state ( pause, resume @see DeliveryGUI) then calls work method which represents one unit of work.
-	 * then changes current thread state into 'sleep' for 500ms
+	 * This method implements Runnable interface. Represents Branch work / Hub work
+	 * (as inherited method), runs while there is at least one package to deliver,
+	 * then checks the system state ( pause, resume @see DeliveryGUI) then calls
+	 * work method which represents one unit of work. then changes current thread
+	 * state into 'sleep' for 500ms
 	 * <p>
+	 * 
 	 * @see DrawBranch
 	 * @see Pauser
 	 */
@@ -383,42 +395,40 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 				work();
 				Thread.sleep(500L);
 			} catch (InterruptedException e) {
+				return;
 			}
 		}
 		System.out.println(this.getNodeName() + " Is finished work!");
 	}
+
 	/**
 	 * Getter for field 'guiListener'
 	 * 
-	 * @return guiListener - DrawBranch 
-	 * @see DrawBranch 
+	 * @return guiListener - DrawBranch
+	 * @see DrawBranch
 	 * 
 	 */
 	public DrawBranch getGuiListener() {
 		return guiListener;
 	}
+
+
+	
+
 	/**
-	 * This method adding new Thread to array list of threads ,that executes Truck's (Van,Standard,NonStandard) run method. 
-	 * Used to initialize ArrayList of trucks
-	 * 
-	 */
-	private void addTruckThread(Truck t) {
-		Thread thread = new Thread(t);
-		this.truckThreads.add(thread);
-	}
-	/**
-	 * This method is starter for all Threads that representing trucks
-	 * basically starts all truck threads.
+	 * This method is starter for all Threads that representing trucks basically
+	 * starts all truck threads.
 	 * 
 	 */
 	public void startAllTrucks() {
-		for (Thread t : truckThreads) {
-			t.start();
+		for (Truck t: listTrucks) {
+			executor.execute(t);
 		}
 	}
+
 	/**
-	 * This method is used as API to add packages into
-	 *  Vector to provide another layer of synchronized protection. 
+	 * This method is used as API to add packages into Vector to provide another
+	 * layer of synchronized protection.
 	 * 
 	 * 
 	 */
@@ -427,9 +437,10 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 			listPackages.add(p);
 		}
 	}
+
 	/**
-	 * This method is used as API to remove packages into
-	 *  Vector to provide another layer of synchronized protection. 
+	 * This method is used as API to remove packages into Vector to provide another
+	 * layer of synchronized protection.
 	 */
 	public void removePackage(Package p) {
 		synchronized (listPackages) {
@@ -438,42 +449,61 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 	}
 
 	private void setId(int id) {
-		this.branchId= id;
+		this.branchId = id;
 	}
-	
+
 	private void setName(String name) {
 
 		this.branchName = name;
 	}
-	
+
 	private void setListPackages(Vector<Package> packages) {
 		this.listPackages = packages;
 	}
-
-	private void setTruckThreads(ArrayList<Thread> tThreads) {
-		this.truckThreads = tThreads;
+	public void restoreTrucks() {
+		((ExecutorService) executor).shutdownNow();
+		executor = Executors.newCachedThreadPool();
+		this.startAllTrucks();
+		
 	}
 
-
-
 	protected Object clone() throws CloneNotSupportedException {
-	Object obj = null;
-	obj = super.clone();
-	Branch clone = (Branch)obj;
-	clone.setId(numBranch++);
-	clone.setName("Branch " + clone.branchId);
-	clone.setListTrucks(new ArrayList<Truck>());
-	clone.setListPackages(new Vector<Package>());
-	clone.setTruckThreads(new ArrayList<Thread>());
-	System.out.println("Cloning " + this);
-	clone.registerListener();
-	for(Truck t:this.getListTrucks())
-		clone.getListTrucks().add((Van)((Van)t).clone());
-	return clone;
-}
-
-
-
-
+		Object obj = null;
+		obj = super.clone();
+		Branch clone = (Branch) obj;
+		clone.setId(numBranch++);
+		clone.setName("Branch " + clone.branchId);
+		clone.setListTrucks(new ArrayList<Truck>());
+		clone.setListPackages(new Vector<Package>());
+		clone.executor = Executors.newCachedThreadPool();
+		System.out.println("Cloning " + this);
+		clone.registerListener();
+		for (Truck t : this.getListTrucks())
+			clone.getListTrucks().add((Van) ((Van) t).clone());
+		clone.guiListener.setHidden(false);
+		clone.guiListener.getPathToHub().setHidden(false);
+		return clone;
+	}
+	public void setBranch(Branch b) {
+		listTrucks = b.listTrucks;
+		listPackages = b.listPackages;
+		linkPackages();
+		for (Truck t: listTrucks) {
+			t.registerListener();
+			t.linkPackages();
+		}
+		
+	}
+	public void linkPackages() {
+		for (Package p: listPackages) {
+			for(Package origin: MainOffice.getInstance().getPackages()) {
+				if(p.equals(origin)) {
+					p = origin;
+					break;
+				}
+			}
+	
+		}
+	}
 
 }

@@ -1,6 +1,9 @@
 package components;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import GUI.DrawPackage;
 import GUI.DrawTruck;
@@ -20,7 +23,7 @@ import GUI.DrawTruck;
 public class Hub extends Branch implements Node {
 
 	private ArrayList<Branch> branches;
-	private ArrayList<Thread> branchesThreads;
+	private Executor branchExecutor;
 	private static int nextBranch = 0;
 
 	/**
@@ -30,7 +33,7 @@ public class Hub extends Branch implements Node {
 	public Hub() {
 		super("HUB");
 		branches = new ArrayList<Branch>();
-		branchesThreads = new ArrayList<Thread>();
+		branchExecutor = Executors.newCachedThreadPool();
 		System.out.println("Creating " + super.toString());
 	}
 
@@ -42,7 +45,7 @@ public class Hub extends Branch implements Node {
 	 */
 	public Hub(Hub other) {
 		super(((Branch) other));
-		branchesThreads = new ArrayList<Thread>();
+		branchExecutor = Executors.newCachedThreadPool();
 		branches = new ArrayList<Branch>();
 		for (Branch b : other.getBranches()) {
 			addBranch(new Branch(b));
@@ -139,6 +142,7 @@ public class Hub extends Branch implements Node {
 	 * 
 	 */
 	public boolean sendToWorkStandardTruckByBranchId(int branchId) {
+		nextBranch = (nextBranch) % branches.size();
 		Truck st = findAvailableTruck("StandardTruck");
 		if (st == null)
 			return false;
@@ -231,14 +235,7 @@ public class Hub extends Branch implements Node {
 		}
 	}
 
-	/**
-	 * Getter for field 'branchesThreads'
-	 * 
-	 * @return branchesThreads - ArrayList<Thread>
-	 */
-	public ArrayList<Thread> getBranchesThreads() {
-		return branchesThreads;
-	}
+
 
 	/**
 	 * This method adding new brunch to array list of branches , and also adding
@@ -246,15 +243,17 @@ public class Hub extends Branch implements Node {
 	 */
 	public void addBranch(Branch b) {
 		branches.add(b);
-		branchesThreads.add(new Thread(b));
+		
 	}
 
 	public void cloneBranch(int id) throws Exception {
 		if (!(id >= 0 && id < branches.size()))
 			throw new Exception("Invalid clone id received!\n");
-		addBranch((Branch) (branches.get(id).clone()));
-		branchesThreads.get(branchesThreads.size() - 1).start();
-		branches.get(branches.size() - 1).startAllTrucks();
+		Branch clone = (Branch) (branches.get(id).clone());
+		clone.registerListener();
+		clone.startAllTrucks();
+		addBranch(clone);
+		branchExecutor.execute(clone);
 	}
 
 	/**
@@ -263,9 +262,9 @@ public class Hub extends Branch implements Node {
 	 * 
 	 */
 	public void startAllBranches() {
-
-		for (Thread t : branchesThreads) {
-			t.start();
+		branchExecutor.execute(this);
+		for (Branch b : this.branches) {
+			branchExecutor.execute(b);
 		}
 	}
 
@@ -273,4 +272,26 @@ public class Hub extends Branch implements Node {
 	protected Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Cannot clone hub!");
 	}
+
+	public void setBranches(ArrayList<Branch> branches) {
+		this.branches = branches;
+	}
+
+	
+	public void setHub(Hub h) {
+		this.registerListener();
+		branches.remove(branches.size()-1);
+		for(int i=0; i<branches.size();i++) {
+			Branch newB = branches.get(i);
+			Branch oldB = h.branches.get(i);
+			newB.setBranch(oldB);
+		}
+		this.setBranch(h);
+	}
+	public void restartAllBranches() {
+		((ExecutorService) branchExecutor).shutdownNow();
+		branchExecutor = Executors.newCachedThreadPool();
+		startAllBranches();
+	}
+
 }

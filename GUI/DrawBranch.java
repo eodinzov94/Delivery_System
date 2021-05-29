@@ -20,6 +20,7 @@ public class DrawBranch extends DrawObject {
 
 	private final DrawPath pathToHub;
 	private final int branchId;
+	boolean isHidden;
 	static final Color hasPackage  = Color.blue;
 	static final Color noPackage  = Color.cyan;
 	static private final int width = 40;
@@ -37,6 +38,7 @@ public class DrawBranch extends DrawObject {
 		this.pathToHub = pathToHub;
 		this.setColor(noPackage);
 		this.branchId = branchId;
+		isHidden = false;
 	}
 	
 	
@@ -46,6 +48,7 @@ public class DrawBranch extends DrawObject {
 		this.pathToHub = other.pathToHub;
 		this.setColor(other.getColor());
 		this.branchId = other.branchId;
+		this.isHidden = other.isHidden;
 	}
 	
 
@@ -72,6 +75,8 @@ public class DrawBranch extends DrawObject {
 	 * @param g - Graphics object
 	 */
 	public void paintComponent(Graphics g){
+		if(isHidden)
+			return;
 		int x = this.getCurrentLocation().getX();
 		int y = this.getCurrentLocation().getY();
 		g.setColor(this.getColor());
@@ -130,5 +135,11 @@ public class DrawBranch extends DrawObject {
 	public int getBranchId() {
 		return branchId;
 	}
+	public boolean isHidden() {
+		return isHidden;
+	}
 
+	public void setHidden(boolean isHidden) {
+		this.isHidden = isHidden;
+	}
 }

@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import components.Hub;
+
 import components.MainOffice;
 import components.Originator;
 import components.Pauser;
@@ -152,7 +152,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			} catch (IOException e1) {
 			}
 		}
-		else if(bName.equals("Clone branch") && numOfBranches < 9) {
+		else if(bName.equals("Clone branch") && numOfBranches < 8) {
 			stopAllThreads();
 			try {
 				Thread.sleep(20L);
@@ -162,17 +162,19 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			numOfBranches++;
 			new CloneDialog();
 			resumeAllThreads();
+			System.out.println("-------------------------Clone---------------------");
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
-//			stopAllThreads();
-//			MainOffice.getInstance().killAllThreads();
-//			try {
-//				Thread.sleep(20L);
-//			} catch (InterruptedException e1) {
-//			}
-//			Originator.setState();
-//			numOfBranches--;
-//			MainOffice.getInstance().startAllThreads();
+			stopAllThreads();
+			try {
+				Thread.sleep(20L);
+			} catch (InterruptedException e1) {
+			}
+			Originator.setState();
+			numOfBranches--;
+			MainOffice.getInstance().resetThreads();
+			resumeAllThreads();
+			System.out.println("-------------------------RESTORE---------------------");
 		}
 	}
 	
