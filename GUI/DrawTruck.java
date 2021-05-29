@@ -38,6 +38,16 @@ public abstract class DrawTruck extends DrawObject {
 		numTrucks++;
 		isHidden = true;
 	}
+	
+	public DrawTruck(DrawTruck other) {
+		super((DrawObject)other);
+		destination = other.getDestination();
+		startPoint = other.startPoint;
+		totalTicksToArrive = other.totalTicksToArrive;
+		ticksOver = other.ticksOver;
+		truckId = other.truckId;
+		isHidden = other.isHidden;
+	}
 
 	/**
 	 * Overrides paintComponent as used by Swing components, with custom logic to

@@ -1,6 +1,5 @@
 package components;
 import java.util.ArrayList;
-
 import GUI.DeliveryGUI;
 import GUI.DisplayPanel;
 import GUI.DrawTruck;
@@ -21,9 +20,9 @@ import GUI.Observable;
  */
 public abstract class Truck implements Node, Runnable, Observable {
 	public static int numTrucks = 0; // running static integer that helps number our trucks.
-	private final int truckID;
-	private final String licensePlate;
-	private final String truckModel;
+	private int truckID;
+	private String licensePlate;
+	private String truckModel;
 	private boolean available;
 	private int timeLeft;
 
@@ -50,6 +49,22 @@ public abstract class Truck implements Node, Runnable, Observable {
 		registerListener();
 	}
 
+	public Truck(Truck other) {
+		truckModel = other.getTruckModel();
+		licensePlate = other.getLicensePlate();
+		available = true;
+		truckID = other.getTruckID();
+		packages = new ArrayList<Package>();
+		for(Package p: other.getPackages()) {
+			if( p instanceof SmallPackage)
+				packages.add(new SmallPackage(p));
+			else if( p instanceof StandardPackage)
+				packages.add(new StandardPackage(p));
+			else if( p instanceof NonStandardPackage)
+				packages.add(new NonStandardPackage(p));
+		}
+		registerListener();
+	}
 	/**
 	 * Constructor for the class Truck. available - boolean representing truck
 	 * availability (sets True by default) truckID - int representing the truck id
@@ -76,6 +91,21 @@ public abstract class Truck implements Node, Runnable, Observable {
 	 */
 	public boolean isAvailable() {
 		return available;
+	}
+	public void setTruckID(int truckID) {
+		this.truckID = truckID;
+	}
+
+	public void setLicensePlate(String licensePlate) {
+		this.licensePlate = licensePlate;
+	}
+
+	public void setTruckModel(String truckModel) {
+		this.truckModel = truckModel;
+	}
+
+	public void setPackages(ArrayList<Package> packages) {
+		this.packages = packages;
 	}
 
 	/**
@@ -267,4 +297,5 @@ public abstract class Truck implements Node, Runnable, Observable {
 		}
 		System.out.println(this.getNodeName() + " Is finished work!");
 	}
+
 }

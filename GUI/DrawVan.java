@@ -27,6 +27,12 @@ public class DrawVan extends DrawTruck {
 		super();
 		this.setColor(defaultColor);
 	}
+	
+	
+	public DrawVan(DrawVan other) {
+		super((DrawTruck)other);
+		this.setColor(defaultColor);
+	}
 
 	/**This function updates the current object to fit the parameters of the component it displays.
 	 * <p>

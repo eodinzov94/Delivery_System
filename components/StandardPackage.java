@@ -24,6 +24,15 @@ public class StandardPackage extends Package {
 		this.weight=weight;
 		System.out.println("Creating "+ this);
 	}
+	
+	
+	public StandardPackage(Package other) {
+		super(other);
+		this.weight=((StandardPackage)other).weight;
+		System.out.println("Copying "+ this);
+	}
+	
+	
 	/**
 	 * Get function for the field 'weight'
 	 * 

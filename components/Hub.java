@@ -19,7 +19,6 @@ import GUI.DrawTruck;
  */
 public class Hub extends Branch implements Node {
 
-
 	private ArrayList<Branch> branches;
 	private ArrayList<Thread> branchesThreads;
 	private static int nextBranch = 0;
@@ -27,7 +26,6 @@ public class Hub extends Branch implements Node {
 	/**
 	 * Constructor for the class Hub.
 	 * <p>
-	 * Access is private because the class was implemented as a Singleton.
 	 */
 	public Hub() {
 		super("HUB");
@@ -36,13 +34,29 @@ public class Hub extends Branch implements Node {
 		System.out.println("Creating " + super.toString());
 	}
 
+	/**
+	 * Copy Constructor for the class Hub.
+	 * <p>
+	 * 
+	 * @param other - other hub to copy from
+	 */
+	public Hub(Hub other) {
+		super(((Branch) other));
+		branchesThreads = new ArrayList<Thread>();
+		branches = new ArrayList<Branch>();
+		for (Branch b : other.getBranches()) {
+			addBranch(new Branch(b));
+		}
+
+		System.out.println("Copying " + super.toString());
+	}
+
 	public void resetHub() {
 		Truck.numTrucks = 0;
 		Package.numOfPackages = 0;
 		DrawPackage.numOfPackages = 0;
 		DrawTruck.numTrucks = 0;
 	}
-
 
 	/**
 	 * Implementation of the 'getName' function in the Node interface
@@ -235,6 +249,14 @@ public class Hub extends Branch implements Node {
 		branchesThreads.add(new Thread(b));
 	}
 
+	public void cloneBranch(int id) throws Exception {
+		if (!(id >= 0 && id < branches.size()))
+			throw new Exception("Invalid clone id received!\n");
+		addBranch((Branch) (branches.get(id).clone()));
+		branchesThreads.get(branchesThreads.size() - 1).start();
+		branches.get(branches.size() - 1).startAllTrucks();
+	}
+
 	/**
 	 * Starter for all branches Threads basically starts all threads that executes
 	 * branches
@@ -247,13 +269,8 @@ public class Hub extends Branch implements Node {
 		}
 	}
 
-//	@Override
-//	protected Object clone() throws CloneNotSupportedException {
-//		Object clone = null;
-//		clone = super.clone();
-//		for(Truck t:this.getListTrucks())
-//			((Branch)clone).getListTrucks().add((Truck) t.clone());
-//		return clone;
-//	}
-
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException("Cannot clone hub!");
+	}
 }

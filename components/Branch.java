@@ -21,8 +21,8 @@ import GUI.Observable;
 public class Branch implements Node, Runnable, Observable,Cloneable {
 
 	static int numBranch = -1; // starts at -1, because HUB is created first.
-	private final int branchId;
-	private final String branchName;
+	private int branchId;
+	private String branchName;
 	private ArrayList<Truck> listTrucks;
 	private Vector<Package> listPackages;
 	private ArrayList<Thread> truckThreads;
@@ -44,6 +44,35 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 		registerListener();
 	}
 
+	
+	public Branch(Branch other) {
+		this.branchId = other.getBranchId();
+		this.branchName = "Branch " + branchId;
+		this.truckThreads = new ArrayList<Thread>();
+		this.listTrucks = new ArrayList<Truck>();
+		for(Truck t: other.getListTrucks()) {
+			if( t instanceof Van)
+				listTrucks.add(new Van(t));
+			else if (t instanceof StandardTruck)
+				listTrucks.add(new StandardTruck(t));
+			else if (t instanceof NonStandardTruck)
+				listTrucks.add(new NonStandardTruck(t));
+		}
+		this.listPackages = new Vector<Package>();
+		for(Package p: other.getListPackages()) {
+			if( p instanceof SmallPackage)
+				listPackages.add(new SmallPackage(p));
+			else if( p instanceof StandardPackage)
+				listPackages.add(new StandardPackage(p));
+			else if( p instanceof NonStandardPackage)
+				listPackages.add(new NonStandardPackage(p));
+		}
+		System.out.println("Copying " + this);
+		registerListener();
+	}
+	
+
+	
 	/**
 	 * Get function for the field 'listTrucks'
 	 * 
@@ -407,5 +436,44 @@ public class Branch implements Node, Runnable, Observable,Cloneable {
 			listPackages.remove(p);
 		}
 	}
+
+	private void setId(int id) {
+		this.branchId= id;
+	}
 	
+	private void setName(String name) {
+
+		this.branchName = name;
+	}
+	
+	private void setListPackages(Vector<Package> packages) {
+		this.listPackages = packages;
+	}
+
+	private void setTruckThreads(ArrayList<Thread> tThreads) {
+		this.truckThreads = tThreads;
+	}
+
+
+
+	protected Object clone() throws CloneNotSupportedException {
+	Object obj = null;
+	obj = super.clone();
+	Branch clone = (Branch)obj;
+	clone.setId(numBranch++);
+	clone.setName("Branch " + clone.branchId);
+	clone.setListTrucks(new ArrayList<Truck>());
+	clone.setListPackages(new Vector<Package>());
+	clone.setTruckThreads(new ArrayList<Thread>());
+	System.out.println("Cloning " + this);
+	clone.registerListener();
+	for(Truck t:this.getListTrucks())
+		clone.getListTrucks().add((Van)((Van)t).clone());
+	return clone;
+}
+
+
+
+
+
 }

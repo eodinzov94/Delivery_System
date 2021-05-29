@@ -296,7 +296,7 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 * like branches/trucks/hub ... etc
 	 * <p>
 	 */
-	private void startAllThreads() {
+	public void startAllThreads() {
 		DeliveryGUI.getDeliveryGUI().startDisplayThread();
 		for (Branch b:hub.getBranches()) {
 			b.startAllTrucks();
@@ -308,6 +308,18 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		hub.startAllTrucks();
 		hubThread.start();
 			
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void killAllThreads() {
+//		DeliveryGUI.getDeliveryGUI().killDisplayThread();
+//		for (Branch b:hub.getBranches()) {
+//			b.killAllTrucks();
+//		}
+//		((ExecutorService)executor).shutdownNow();
+//		hub.killAllBranches();
+//		hub.killAllTrucks();
+//		hubThread.stop();
 	}
 	/**
 	 * This method implements Runnable interface. 

@@ -2,22 +2,26 @@ package components;
 
 import GUI.DeliveryGUI;
 
-public class Customer implements Node ,Runnable{
+public class Customer implements Node, Runnable {
 	private static int idCounter = 0;
 	private Address add;
 	private int id;
-	private boolean isFinished=false;
+	private boolean isFinished = false;
 	private int packCreated = 0;
-	
-	
+
 	public Customer(int branchSize) {
-		System.out.println(branchSize);
-		add = new Address(MainOffice.getRand().nextInt(branchSize), MainOffice.getRand().nextInt(999999 - 100000) + 100000);
+		add = new Address(MainOffice.getRand().nextInt(branchSize),
+				MainOffice.getRand().nextInt(999999 - 100000) + 100000);
 		id = ++idCounter;
 	}
-	
-	
-	
+
+	public Customer(Customer other) {
+		add = other.add;
+		id = other.id;
+		packCreated = other.packCreated;
+		isFinished = other.isFinished;
+	}
+
 	/**
 	 * This function creates a new, pseudo-random package and adds it to the system.
 	 * <p>
@@ -34,7 +38,8 @@ public class Customer implements Node ,Runnable{
 		type = MainOffice.getRand().nextInt(3);
 		priorityId = MainOffice.getRand().nextInt(3);
 		Address dAdd;
-		dAdd = new Address(MainOffice.getRand().nextInt(Branch.numBranch), MainOffice.getRand().nextInt(999999 - 100000) + 100000);
+		dAdd = new Address(MainOffice.getRand().nextInt(Branch.numBranch),
+				MainOffice.getRand().nextInt(999999 - 100000) + 100000);
 		switch (priorityId) {
 		case 0:
 			p = Priority.LOW;
@@ -51,17 +56,19 @@ public class Customer implements Node ,Runnable{
 		}
 		switch (type) {
 		case 0:
-			pack = new SmallPackage(p, add, dAdd, MainOffice.getRand().nextBoolean(),this);
+			pack = new SmallPackage(p, add, dAdd, MainOffice.getRand().nextBoolean(), this);
 			break;
 		case 1:
-			pack = new StandardPackage(p, add, dAdd, (MainOffice.getRand().nextInt(9) + 1) + MainOffice.getRand().nextDouble(),this);
+			pack = new StandardPackage(p, add, dAdd,
+					(MainOffice.getRand().nextInt(9) + 1) + MainOffice.getRand().nextDouble(), this);
 			break;
 		case 2:
-			pack = new NonStandardPackage(p, add, dAdd, (MainOffice.getRand().nextInt(500 - 10) + 10), (MainOffice.getRand().nextInt(1000 - 50) + 50 ),
-					(MainOffice.getRand().nextInt(400 - 100) + 100), this);
+			pack = new NonStandardPackage(p, add, dAdd, (MainOffice.getRand().nextInt(500 - 10) + 10),
+					(MainOffice.getRand().nextInt(1000 - 50) + 50), (MainOffice.getRand().nextInt(400 - 100) + 100),
+					this);
 			break;
 		default:
-			pack = new SmallPackage(p, add, dAdd, MainOffice.getRand().nextBoolean(),this);
+			pack = new SmallPackage(p, add, dAdd, MainOffice.getRand().nextBoolean(), this);
 			break;
 		}
 
@@ -70,22 +77,24 @@ public class Customer implements Node ,Runnable{
 		MainOffice.getInstance().AssociatePackage(pack);
 		packCreated++;
 	}
+
 	public void checkFinished() {
-		if(MainOffice.getInstance().checkIfAllPackagesDeliveredByCustomerId(id))
+		if (MainOffice.getInstance().checkIfAllPackagesDeliveredByCustomerId(id))
 			isFinished = true;
 	}
+
 	@Override
 	public void run() {
 		System.out.println(getNodeName() + "  started create packages");
-		while(packCreated <5) {
+		while (packCreated < 5) {
 			try {
 				DeliveryGUI.pauser.look();
 				createPackage();
-				Thread.sleep((MainOffice.getRand().nextInt(4)+2)* 1000);
+				Thread.sleep((MainOffice.getRand().nextInt(4) + 2) * 1000);
 			} catch (InterruptedException ignored) {
 			}
 		}
-		while(!isFinished) {
+		while (!isFinished) {
 			try {
 				DeliveryGUI.pauser.look();
 				checkFinished();
@@ -95,34 +104,25 @@ public class Customer implements Node ,Runnable{
 		}
 	}
 
-
-
 	public int getCustomerId() {
 		return id;
 	}
 
-
-
 	@Override
 	public void collectPackage(Package p) {
-		
+
 	}
-
-
 
 	@Override
 	public void deliverPackage(Package p) {
-		
-		
+
 	}
-
-
 
 	@Override
 	public void work() {
-	
-		
+
 	}
+
 	public String getNodeName() {
 		return "Sender " + id;
 	}

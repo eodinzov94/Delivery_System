@@ -35,6 +35,16 @@ public class NonStandardPackage extends Package {
 		System.out.println("Creating " + this);
 	}
 
+	
+	public NonStandardPackage(Package other) {
+		super(other);
+		NonStandardPackage nsp = (NonStandardPackage) other;
+		this.height = nsp.height;
+		this.length = nsp.length;
+		this.width = nsp.width;
+		System.out.println("Copying " + this);
+	}
+	
 	/**
 	 * Get function for the field 'width'
 	 * 

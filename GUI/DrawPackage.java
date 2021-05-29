@@ -40,6 +40,14 @@ public class DrawPackage extends DrawObject {
 		packageID = 1000 + numOfPackages++;
 		isHidden = true;
 	}
+	
+	public DrawPackage(DrawPackage other) {
+		super((DrawObject)other);
+		upperColor = other.upperColor;
+		lowerColor = other.lowerColor;
+		packageID = other.packageID;
+		isHidden = other.isHidden;
+	}
 
 	/**This function updates the current object to fit the parameters of the component it displays.
 	 * <p>

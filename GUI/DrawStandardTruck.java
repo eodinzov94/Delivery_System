@@ -34,6 +34,13 @@ public class DrawStandardTruck extends DrawTruck {
 		destinationId = noDestination;
 	}
 
+	public DrawStandardTruck(DrawStandardTruck other) {
+		super((DrawTruck)other);
+		numPackages = other.getNumPackages();
+		this.setColor(other.getColor());
+		this.setCurrentLocation(other.getCurrentLocation());
+		destinationId = other.getDestinationId();
+	}
 	/**
 	 * Get function for the field 'numPackages'
 	 * 

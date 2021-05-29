@@ -28,6 +28,11 @@ public abstract class DrawObject implements Listener {
 		this.c = defaultObjectColor;
 	}
 
+	public DrawObject(DrawObject other) {
+		currentLocation = other.getCurrentLocation();
+		this.c = other.c;
+	}
+	
 	/**
 	 * Get function for the field 'currentLocation'
 	 * 

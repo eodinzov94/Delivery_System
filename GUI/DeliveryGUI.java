@@ -120,7 +120,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			setCreated(true);
 		} else if (bName.equals("Start") && isCreated && !isGameStarted) {  // 'Start' was selected, if a system was created- start the system simulation.
 			this.startApp();
-		} else if (MainOffice.getInstance() == null) {
+		} else if (isGameStarted != true) {
 			return;
 		} else if (bName.equals("Stop")) { // 'Stop' was selected, suspend all threads.
 			stopAllThreads();
@@ -153,16 +153,30 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			}
 		}
 		else if(bName.equals("Clone branch") && numOfBranches < 9) {
+			stopAllThreads();
+			try {
+				Thread.sleep(20L);
+			} catch (InterruptedException e1) {
+			}
 			Originator.createState();
 			numOfBranches++;
-			//TODO:CLONE IT SELF
+			new CloneDialog();
+			resumeAllThreads();
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
-			Originator.setState();
-			numOfBranches--;
+//			stopAllThreads();
+//			MainOffice.getInstance().killAllThreads();
+//			try {
+//				Thread.sleep(20L);
+//			} catch (InterruptedException e1) {
+//			}
+//			Originator.setState();
+//			numOfBranches--;
+//			MainOffice.getInstance().startAllThreads();
 		}
 	}
 	
+
 	/**
 	 * Helper function, creates an info table to display all the packages info on the screen.
 	 * <p>

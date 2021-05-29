@@ -38,6 +38,16 @@ public class DrawBranch extends DrawObject {
 		this.setColor(noPackage);
 		this.branchId = branchId;
 	}
+	
+	
+	public DrawBranch(DrawBranch other) {
+		super((DrawObject)other);
+		
+		this.pathToHub = other.pathToHub;
+		this.setColor(other.getColor());
+		this.branchId = other.branchId;
+	}
+	
 
 	/**This function updates the current object to fit the parameters of the component it displays.
 	 * <p>

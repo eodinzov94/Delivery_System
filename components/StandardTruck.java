@@ -35,6 +35,15 @@ public class StandardTruck extends Truck {
 		System.out.println("Creating " + this);
 	}
 
+	
+	public StandardTruck(Truck other) {
+		super(other);
+		StandardTruck st= (StandardTruck)other;
+		maxWeight = st.getMaxWeight();
+		this.currentWeight = st.getCurrentWeight();
+		destination = st.destination; 
+		System.out.println("Copying " + this);
+	}
 	/**
 	 * Constructor for the class StandardTruck.
 	 * 

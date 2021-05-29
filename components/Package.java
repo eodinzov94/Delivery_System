@@ -57,6 +57,19 @@ public abstract class Package implements Observable{
 		support.firePropertyChange("Created", null, this);
 	}
 
+	public Package(Package other) {
+		this.priority = other.priority;
+		this.senderAddress = other.senderAddress;
+		this.destinationAddress = other.destinationAddress;
+		this.tracking = new ArrayList<Tracking>(other.getTracking());
+		
+		this.packageID = other.getPackageID();
+		this.status = other.getStatus();
+		registerListener();
+		customerId = other.customerId;
+		support = other.support;
+	}
+	
 	/**
 	 * Function to add a new tracking record to the tracking list.
 	 * <p>

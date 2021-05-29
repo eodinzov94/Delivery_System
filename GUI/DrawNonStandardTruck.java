@@ -31,6 +31,11 @@ public class DrawNonStandardTruck extends DrawTruck {
 		this.setColor(Color.PINK);
 	}
 
+	public DrawNonStandardTruck(DrawNonStandardTruck other) {
+		super((DrawTruck)other);
+		this.setColor(other.getColor());
+	}
+	
 	/**This function updates the current object to fit the parameters of the component it displays.
 	 * <p>
 	 * Every class instance represents a back-end component object that, as part of the system simulation, changes properties such as location, direction or even capacity.

@@ -1,5 +1,7 @@
 package components;
 
+import java.util.ArrayList;
+
 /**
  * This abstract class represents a Van (type of Truck) in the delivery system.
  * <p>
@@ -20,6 +22,11 @@ public class Van extends Truck {
 	public Van() {
 		super();
 		System.out.println("Creating " + this);
+	}
+
+	public Van(Truck other) {
+		super(other);
+		System.out.println("Copying " + this);
 	}
 
 	/**
@@ -78,14 +85,15 @@ public class Van extends Truck {
 	/**
 	 * This function imitates a unit of Van work during a clock pulse.
 	 * <p>
-	 * The function checks if this truck is available, if yes - changes current Thread state into wait.
-	 * the truck's thread will in waiting state until gets notified by a branch that there is
-	 * a new package collect/delivery mission, if truck is busy
-	 * - means he is working and this function representing the next tick of work.
-	 * if TimeLeft = 0 -> truck arrived to the branch, delivering package by using
-	 * deliverPackage, set available true - because mission is complete! at the end
-	 * notifies guiListener (DrawTruck object that representing truck in a GUI ) by using alert() method
-	 * then, reduces time left by 1 by using reduceTimeLeft() method.
+	 * The function checks if this truck is available, if yes - changes current
+	 * Thread state into wait. the truck's thread will in waiting state until gets
+	 * notified by a branch that there is a new package collect/delivery mission, if
+	 * truck is busy - means he is working and this function representing the next
+	 * tick of work. if TimeLeft = 0 -> truck arrived to the branch, delivering
+	 * package by using deliverPackage, set available true - because mission is
+	 * complete! at the end notifies guiListener (DrawTruck object that representing
+	 * truck in a GUI ) by using alert() method then, reduces time left by 1 by
+	 * using reduceTimeLeft() method.
 	 * 
 	 * 
 	 */
@@ -163,7 +171,8 @@ public class Van extends Truck {
 		} else if (p.getStatus().equals(Status.DISTRIBUTION)) {
 			p.setStatus(Status.DELIVERED);
 			p.addTracking(null, Status.DELIVERED);
-			System.out.println(this.getNodeName() + " has delivered package " + p.getPackageID() + " to the destination");
+			System.out
+					.println(this.getNodeName() + " has delivered package " + p.getPackageID() + " to the destination");
 			if (p instanceof SmallPackage && ((SmallPackage) p).isAcknowledge())
 				System.out.println("Package " + p.getPackageID() + " delivery confirmed by customer");
 		} else {
@@ -173,6 +182,19 @@ public class Van extends Truck {
 			System.out.println("ERROR! Problem removing package " + p.toString());
 	}
 
-	
+	protected Object clone() throws CloneNotSupportedException {
+		Object obj = null;
+		obj = super.clone();
+		Van clone = (Van) obj;
+		clone.setTruckModel("M" + MainOffice.getRand().nextInt(5));
+		clone.setLicensePlate((100 + MainOffice.getRand().nextInt(900)) + "-" + (10 + MainOffice.getRand().nextInt(90))
+				+ "-" + (100 + MainOffice.getRand().nextInt(900)));
+		clone.setAvailable(true);
+		clone.setTruckID(2000 + numTrucks);
+		numTrucks++;
+		clone.setPackages(new ArrayList<Package>());
+		registerListener();
+		return clone;
+	}
 
 }

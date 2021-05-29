@@ -31,6 +31,15 @@ public class NonStandardTruck extends Truck {
 		System.out.println("Creating " + this);
 	}
 
+	
+	public NonStandardTruck(Truck other) {
+		super(other);
+		// default values
+		width = 400;
+		length = 1100;
+		height = 350;
+		System.out.println("Copying " + this);
+	}
 	/**
 	 * Constructor for the class NonStandardPackage.
 	 * <p>

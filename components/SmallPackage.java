@@ -27,6 +27,15 @@ public class SmallPackage extends Package {
 		System.out.println("Creating "+ this);
 	}
 	
+	
+	public SmallPackage(Package other) {
+		super(other);
+		this.acknowledge=((SmallPackage)other).acknowledge;
+		System.out.println("Copying "+ this);
+	}
+	
+	
+	
 	/**
 	 * Standard function to represent class as a String.
 	 * 
