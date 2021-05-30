@@ -1,4 +1,5 @@
 package components;
+
 import java.util.ArrayList;
 import GUI.DeliveryGUI;
 import GUI.DisplayPanel;
@@ -18,7 +19,7 @@ import GUI.Observable;
  *
  *
  */
-public abstract class Truck implements Node, Runnable, Observable,Cloneable {
+public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	public static int numTrucks = 0; // running static integer that helps number our trucks.
 	private int truckID;
 	private String licensePlate;
@@ -52,19 +53,22 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 	public Truck(Truck other) {
 		truckModel = other.getTruckModel();
 		licensePlate = other.getLicensePlate();
-		available = true;
+		available = other.available;
 		truckID = other.getTruckID();
 		packages = new ArrayList<Package>();
-		for(Package p: other.getPackages()) {
-			if( p instanceof SmallPackage)
-				packages.add(new SmallPackage(p));
-			else if( p instanceof StandardPackage)
-				packages.add(new StandardPackage(p));
-			else if( p instanceof NonStandardPackage)
-				packages.add(new NonStandardPackage(p));
-		}
+		timeLeft = other.timeLeft;
+		if (other.getPackages().size() > 0)
+			for (Package p : other.getPackages()) {
+				if (p instanceof SmallPackage)
+					packages.add(new SmallPackage(p));
+				else if (p instanceof StandardPackage)
+					packages.add(new StandardPackage(p));
+				else if (p instanceof NonStandardPackage)
+					packages.add(new NonStandardPackage(p));
+			}
 		registerListener();
 	}
+
 	/**
 	 * Constructor for the class Truck. available - boolean representing truck
 	 * availability (sets True by default) truckID - int representing the truck id
@@ -92,6 +96,7 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 	public boolean isAvailable() {
 		return available;
 	}
+
 	public void setTruckID(int truckID) {
 		this.truckID = truckID;
 	}
@@ -227,14 +232,18 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 	public ArrayList<Package> getPackages() {
 		return packages;
 	}
+
 	/**
-	 * This function implements 'Observable' interface inspired by Listener-Observer that we learned 
-	 * in classroom. 
-	 * Function using search method from Display panel to find matching DrawDrawTruck instance with same ID
-	 * to store the reference of DrawDrawTruck instance which represents the DrawTruck in a GUI.
-	 * It is important to note that such instance will always exist since the all GUI and "Pseudo - Backend " objects are initialized exactly in the same order.
-	 * where components package represents "pseudo backend" and GUI package represents frontend
+	 * This function implements 'Observable' interface inspired by Listener-Observer
+	 * that we learned in classroom. Function using search method from Display panel
+	 * to find matching DrawDrawTruck instance with same ID to store the reference
+	 * of DrawDrawTruck instance which represents the DrawTruck in a GUI. It is
+	 * important to note that such instance will always exist since the all GUI and
+	 * "Pseudo - Backend " objects are initialized exactly in the same order. where
+	 * components package represents "pseudo backend" and GUI package represents
+	 * frontend
 	 * <p>
+	 * 
 	 * @see Listener
 	 * @see Observable
 	 * @see DrawTruck
@@ -248,12 +257,14 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 		}
 
 	}
+
 	/**
-	 * This function implements 'Observable' interface inspired by Listener-Observer that we learned 
-	 * in classroom. 
-	 * Function alerts the 'DrawTruck' instance that something changed
-	 * to represent the changes in GUI namely in DisplayPanel when repainting new frame
+	 * This function implements 'Observable' interface inspired by Listener-Observer
+	 * that we learned in classroom. Function alerts the 'DrawTruck' instance that
+	 * something changed to represent the changes in GUI namely in DisplayPanel when
+	 * repainting new frame
 	 * <p>
+	 * 
 	 * @see Listener
 	 * @see Observable
 	 * @see DrawTruck
@@ -267,29 +278,40 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 		}
 
 	}
+
 	/**
 	 * Getter for field 'guiListener'
 	 * 
 	 * @return guiListener - DrawTruck
-	 * @see DrawTruck 
+	 * @see DrawTruck
 	 * 
 	 */
 	public DrawTruck getGuiListener() {
 		return guiListener;
 	}
+
 	/**
-	 * This method implements Runnable interface. 
-	 * Represents truck work for all types of trucks as inherited method , runs while there is at least one package to deliver, 
-	 * then checks the system state ( pause, resume @see DeliveryGUI) then calls work method which represents one unit of work.
-	 * then changes current thread state into 'sleep' for 500ms
+	 * This method implements Runnable interface. Represents truck work for all
+	 * types of trucks as inherited method , runs while there is at least one
+	 * package to deliver, then checks the system state ( pause, resume @see
+	 * DeliveryGUI) then calls work method which represents one unit of work. then
+	 * changes current thread state into 'sleep' for 500ms
 	 * <p>
+	 * 
 	 * @see Pauser
 	 */
 	public void run() {
-		System.out.println(this.getNodeName() + " Is Started Work now!");
+		int currentState = MainOffice.getState();
+		System.out.println(this.getNodeName() + " Is Started Work now! Thread: " + Thread.currentThread().getId());
 		while (!MainOffice.isFinished) {
 			try {
 				DeliveryGUI.pauser.look();
+				if (currentState != MainOffice.getState()) {
+					System.out.println("*********************************State is different Thread:"
+							+ Thread.currentThread().getId());
+					Thread.currentThread().stop();
+					System.out.println("*********************************Not Stoped");
+				}
 				work();
 				Thread.sleep(500L);
 			} catch (InterruptedException e) {
@@ -300,36 +322,19 @@ public abstract class Truck implements Node, Runnable, Observable,Cloneable {
 	}
 
 	@Override
-	public void collectPackage(Package p) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deliverPackage(Package p) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void work() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+
 	public void linkPackages() {
-		for (Package p: this.packages) {
-			for(Package origin: MainOffice.getInstance().getPackages()) {
-				if(p.equals(origin)) {
+		for (Package p : this.packages) {
+			for (Package origin : MainOffice.getInstance().getPackages()) {
+				if (p.equals(origin)) {
 					p = origin;
 					break;
 				}
 			}
-	
+
 		}
 	}
 }

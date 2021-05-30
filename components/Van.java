@@ -111,7 +111,7 @@ public class Van extends Truck {
 				setAvailable(true);
 			} else {
 				System.out.println("Logical Error - There is no package associated with Van: " + super.getTruckID()
-						+ " , so Van cannot be busy");
+						+ " , so truck cannot be busy in thread : " + Thread.currentThread().getId());
 			}
 		}
 		alert();

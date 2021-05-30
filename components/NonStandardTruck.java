@@ -159,7 +159,7 @@ public class NonStandardTruck extends Truck {
 				}
 			} else {
 				System.out.println("Logical Error - There is no package associated with NonStandardTruck: "
-						+ super.getTruckID() + " , so truck cannot be busy");
+						+ super.getTruckID() + " , so truck cannot be busy in thread : " + Thread.currentThread().getId());
 			}
 		}
 		alert();

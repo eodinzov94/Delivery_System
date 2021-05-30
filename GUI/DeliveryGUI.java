@@ -32,7 +32,7 @@ import components.Pauser;
 public class DeliveryGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	public final static Pauser pauser = new Pauser();
+	public static Pauser pauser = new Pauser();
 	static private DeliveryGUI frame = null;
 	private Thread gameThread = null;
 	private boolean isGameStarted = false;
@@ -165,7 +165,8 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			System.out.println("-------------------------Clone---------------------");
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
-			stopAllThreads();
+			System.out.println("-------------------------RESTORE---------------------");
+			MainOffice.setState(MainOffice.getState() + 1);
 			try {
 				Thread.sleep(600L);
 			} catch (InterruptedException e1) {
@@ -173,8 +174,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			Originator.setState();
 			numOfBranches--;
 			MainOffice.getInstance().resetThreads();
-			resumeAllThreads();
-			System.out.println("-------------------------RESTORE---------------------");
 		}
 	}
 	
