@@ -24,6 +24,7 @@ public class State {
 	public ArrayList<DrawPackage> allDrawPackages;
 	public ArrayList<DrawTruck> allDrawTrucks;
 	public Vector<DrawPath> drawPaths;
+	public Integer state;
 	public int numTrucks,numOfPackages,numDrawTrucks;
 	public State() {
 		numTrucks = Truck.numTrucks ;

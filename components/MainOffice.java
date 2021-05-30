@@ -34,6 +34,9 @@ import java.io.PrintWriter;
  */
 public class MainOffice implements Runnable,PropertyChangeListener{
 	//Static fields
+	private static int state =0;
+	public static synchronized int getState() {return state;}
+	public static synchronized void setState(int s) {state = s;}
 	public static volatile MainOffice instance=null;
 	public static boolean isFinished;
 	public static final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();

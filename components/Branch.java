@@ -265,18 +265,6 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		alert();
 	}
 
-	/**
-	 * This function is an extension for work().
-	 * <p>
-	 * it calls each of the branches' Vans' work() function.
-	 * 
-	 * @deprecated as a part of HW2
-	 */
-	public void workTrucks() {
-		for (Truck t : listTrucks) {
-			t.work();
-		}
-	}
 
 	/**
 	 * This function adds a truck to the existing list of trucks for the branch.
