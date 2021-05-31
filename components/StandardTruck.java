@@ -184,7 +184,8 @@ public class StandardTruck extends Truck {
 				try {
 					wait();
 				} catch (InterruptedException e) {
-
+					System.out.println("Thread:" + Thread.currentThread().getId() + " Is finished work!");
+					return;
 				}
 		}
 		if (getTimeLeft() == 0) {

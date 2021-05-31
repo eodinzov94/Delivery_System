@@ -147,7 +147,7 @@ public class NonStandardTruck extends Truck {
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					
+					System.out.println("Thread:" + Thread.currentThread().getId() + " Is finished work!");
 				}
 			}
 		if (getTimeLeft() == 0) {
