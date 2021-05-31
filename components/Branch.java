@@ -30,7 +30,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 	private Vector<Package> listPackages;
 	
 	DrawBranch guiListener = null;
-	private Executor executor;
+	private ArrayList<Thread> truckThreads;
 	/**
 	 * Constructor for the class Branch.
 	 * <p>
@@ -44,13 +44,13 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		this.listPackages = new Vector<Package>();
 		System.out.println("Creating " + this);
 		registerListener();
-		executor = Executors.newCachedThreadPool();
+		truckThreads = new ArrayList<Thread>();
 	}
 
 	public Branch(Branch other) {
 		this.branchId = other.getBranchId();
 		this.branchName = "Branch " + branchId;
-		this.executor = Executors.newCachedThreadPool();
+		truckThreads = new ArrayList<Thread>();
 		this.listTrucks = new ArrayList<Truck>();
 		for (Truck t : other.getListTrucks()) {
 			if (t instanceof Van)
@@ -185,7 +185,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		this.branchName = branchName;
 		this.listTrucks = new ArrayList<Truck>();
 		this.listPackages = new Vector<Package>();
-		executor = Executors.newCachedThreadPool();
+		truckThreads = new ArrayList<Thread>();
 		registerListener();
 	}
 
@@ -383,6 +383,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 				work();
 				Thread.sleep(500L);
 			} catch (InterruptedException e) {
+				System.out.println("Thread:" + Thread.currentThread().getId() + " Is finished work!");
 				return;
 			}
 		}
@@ -410,7 +411,9 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 	 */
 	public void startAllTrucks() {
 		for (Truck t: listTrucks) {
-			executor.execute(t);
+			Thread tr = new Thread(t);
+			tr.start();
+			truckThreads.add(tr);
 		}
 	}
 
@@ -448,12 +451,6 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 	private void setListPackages(Vector<Package> packages) {
 		this.listPackages = packages;
 	}
-	public void restoreTrucks() {
-		((ExecutorService) executor).shutdownNow();
-		executor = Executors.newCachedThreadPool();
-		this.startAllTrucks();
-		
-	}
 
 	protected Object clone() throws CloneNotSupportedException {
 		Object obj = null;
@@ -463,7 +460,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		clone.setName("Branch " + clone.branchId);
 		clone.setListTrucks(new ArrayList<Truck>());
 		clone.setListPackages(new Vector<Package>());
-		clone.executor = Executors.newCachedThreadPool();
+		clone.truckThreads = new ArrayList<Thread>();
 		System.out.println("Cloning " + this);
 		clone.registerListener();
 		for (Truck t : this.getListTrucks())
@@ -492,6 +489,10 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 			}
 	
 		}
+	}
+	public void stopAllTrucks() {
+		for( Thread t: truckThreads)
+			t.stop();
 	}
 
 }

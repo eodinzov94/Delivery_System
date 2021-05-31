@@ -12,12 +12,14 @@ package components;
  */
 public class Pauser {
 	private boolean isPaused;
+	private boolean needToKill;
 	/**
 	 * Constructor for the class Pauser.
 	 * 
 	 */
 	public Pauser() {
 		isPaused = false;
+		needToKill = false;
 	}
 	/**
 	 * Method that sets state of the system as "paused"
@@ -54,6 +56,7 @@ public class Pauser {
 			} catch (InterruptedException e) {
 			}
 		}
+		
 	}
 
 }

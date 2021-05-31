@@ -23,7 +23,7 @@ import GUI.DrawTruck;
 public class Hub extends Branch implements Node {
 
 	private ArrayList<Branch> branches;
-	private Executor branchExecutor;
+	private ArrayList<Thread> branchThreads;
 	private static int nextBranch = 0;
 
 	/**
@@ -33,7 +33,7 @@ public class Hub extends Branch implements Node {
 	public Hub() {
 		super("HUB");
 		branches = new ArrayList<Branch>();
-		branchExecutor = Executors.newCachedThreadPool();
+		branchThreads = new ArrayList<Thread>();
 		System.out.println("Creating " + super.toString());
 	}
 
@@ -45,7 +45,7 @@ public class Hub extends Branch implements Node {
 	 */
 	public Hub(Hub other) {
 		super(((Branch) other));
-		branchExecutor = Executors.newCachedThreadPool();
+		branchThreads = new ArrayList<Thread>();
 		branches = new ArrayList<Branch>();
 		for (Branch b : other.getBranches()) {
 			addBranch(new Branch(b));
@@ -253,7 +253,6 @@ public class Hub extends Branch implements Node {
 		clone.registerListener();
 		clone.startAllTrucks();
 		addBranch(clone);
-		branchExecutor.execute(clone);
 	}
 
 	/**
@@ -262,10 +261,14 @@ public class Hub extends Branch implements Node {
 	 * 
 	 */
 	public void startAllBranches() {
-		branchExecutor.execute(this);
 		for (Branch b : this.branches) {
-			branchExecutor.execute(b);
+			Thread t = new Thread(b);
+			t.start();
+			branchThreads.add(t);
 		}
+		Thread t = new Thread(this);
+		t.start();
+		branchThreads.add(t);
 	}
 
 	@Override
@@ -288,10 +291,8 @@ public class Hub extends Branch implements Node {
 		}
 		this.setBranch(h);
 	}
-	public void restartAllBranches() {
-		((ExecutorService) branchExecutor).shutdownNow();
-		branchExecutor = Executors.newCachedThreadPool();
-		startAllBranches();
+	public void stopAllBranches() {
+		for( Thread t: branchThreads)
+			t.stop();
 	}
-
 }

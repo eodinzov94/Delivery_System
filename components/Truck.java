@@ -301,20 +301,14 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	 * @see Pauser
 	 */
 	public void run() {
-		int currentState = MainOffice.getState();
 		System.out.println(this.getNodeName() + " Is Started Work now! Thread: " + Thread.currentThread().getId());
 		while (!MainOffice.isFinished) {
 			try {
 				DeliveryGUI.pauser.look();
-				if (currentState != MainOffice.getState()) {
-					System.out.println("*********************************State is different Thread:"
-							+ Thread.currentThread().getId());
-					Thread.currentThread().stop();
-					System.out.println("*********************************Not Stoped");
-				}
 				work();
 				Thread.sleep(500L);
 			} catch (InterruptedException e) {
+				System.out.println("Thread:" + Thread.currentThread().getId() + " Is finished work!");
 				return;
 			}
 		}

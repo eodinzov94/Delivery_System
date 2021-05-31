@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -46,7 +47,6 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	//Instance fields
 	private final int numOfPackages;
 	private Hub hub;
-	private Thread hubThread;
 	private Vector<Package> packages;
 	private ArrayList<Customer> customers;
 	private Executor executor;
@@ -113,7 +113,6 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 			System.out.println();
 		}
 		packages = new Vector<Package>();
-		hubThread = new Thread(hub);
 		customers = new ArrayList<Customer>();
 		for(int i=0; i<10;i++)
 			customers.add(new Customer(branches));
@@ -315,14 +314,24 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		hub.startAllTrucks();
 	}
 	public void resetThreads() {
-		for (Branch b:hub.getBranches()) {
-			b.restoreTrucks();
-		}
 		resetCustomers();
-		hub.restoreTrucks();
-		hub.restartAllBranches();
+		for (Branch b:hub.getBranches()) {
+			b.startAllTrucks();
+		}
+		startCustomers();
+		hub.startAllBranches();
+		hub.startAllTrucks();
 	}
-	
+	public void stopCustomers() {
+		((ExecutorService) executor).shutdownNow();
+		while(!((ExecutorService) executor).isTerminated()) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * This method implements Runnable interface. 
 	 * just used to run a play() method in Thread.
@@ -336,7 +345,6 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		}
 	}
 	public void resetCustomers() {
-		((ExecutorService) executor).shutdownNow();
 		executor = Executors.newFixedThreadPool(2);
 		startCustomers();
 	}
@@ -388,9 +396,6 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	public void setHub(Hub hub) {
 		this.hub = hub;
 	}
-	public void setHubThread(Thread hubThread) {
-		this.hubThread = hubThread;
-	}
 	public void setCustomers(ArrayList<Customer> customers) {
 		this.customers = customers;
 	}
@@ -400,6 +405,13 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	public static void setClock(int clock) {
 		MainOffice.clock = clock;
 	}
+	public void stopThreads() {
+		stopCustomers();
+		for (Branch b:hub.getBranches()) {
+			b.stopAllTrucks();
+		}
+		hub.stopAllTrucks();
+		hub.stopAllBranches();
+	}
 	
-
 }

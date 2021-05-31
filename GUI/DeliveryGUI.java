@@ -4,11 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Set;
 
 import javax.swing.*;
 
-
+import components.Branch;
 import components.MainOffice;
 import components.Originator;
 import components.Pauser;
@@ -120,6 +120,13 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			setCreated(true);
 		} else if (bName.equals("Start") && isCreated && !isGameStarted) {  // 'Start' was selected, if a system was created- start the system simulation.
 			this.startApp();
+			try {
+				Thread.sleep(80);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			printThreadsInfo();
 		} else if (isGameStarted != true) {
 			return;
 		} else if (bName.equals("Stop")) { // 'Stop' was selected, suspend all threads.
@@ -166,14 +173,20 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
 			System.out.println("-------------------------RESTORE---------------------");
-			MainOffice.setState(MainOffice.getState() + 1);
+			stopAllThreads();
+			MainOffice.getInstance().stopThreads();
 			try {
-				Thread.sleep(600L);
+				Thread.sleep(100);
 			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			MainOffice.setState(MainOffice.getState() + 1);
 			Originator.setState();
 			numOfBranches--;
 			MainOffice.getInstance().resetThreads();
+			resumeAllThreads();
+			printThreadsInfo();
 		}
 	}
 	
@@ -315,5 +328,8 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	public void setClickedBranchInfo(boolean isClickedBranchInfo) {
 		this.isClickedBranchInfo = isClickedBranchInfo;
 	}
-
+	public void printThreadsInfo() {
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		System.out.println("--------Thread Info------Active Threads:"+Thread.activeCount());
+	}
 }

@@ -86,11 +86,17 @@ public class Customer implements Node, Runnable {
 	@Override
 	public void run() {
 		System.out.println(getNodeName() + "  started create packages");
+		int currentState = MainOffice.getState();
 		if(packCreated==5 && isFinished)
 			return;
 		while (packCreated < 5) {
 			try {
 				DeliveryGUI.pauser.look();
+				if (currentState != MainOffice.getState()) {
+					System.out.println("Thread:"
+							+ Thread.currentThread().getId() + "Terminated");
+					return;
+				}
 				createPackage();
 				System.out.println(getNodeName() + "  created package");
 				Thread.sleep((MainOffice.getRand().nextInt(4) + 2) * 1000);
@@ -101,6 +107,11 @@ public class Customer implements Node, Runnable {
 		while (!isFinished) {
 			try {
 				DeliveryGUI.pauser.look();
+				if (currentState != MainOffice.getState()) {
+					System.out.println("Thread:"
+							+ Thread.currentThread().getId() + "Terminated");
+					return;
+				}
 				checkFinished();
 				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
