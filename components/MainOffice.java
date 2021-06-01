@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -16,14 +15,11 @@ import java.util.concurrent.Executors;
 import GUI.DeliveryGUI;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-
-
-
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * This class represents the main office in the delivery system.
@@ -33,18 +29,26 @@ import java.io.PrintWriter;
  * @version 1.0 -- 29.3.2021
  *
  */
-public class MainOffice implements Runnable,PropertyChangeListener{
-	//Static fields
-	private static int state =0;
-	public static synchronized int getState() {return state;}
-	public static synchronized void setState(int s) {state = s;}
-	public static volatile MainOffice instance=null;
+public class MainOffice implements Runnable, PropertyChangeListener {
+	// Static fields
+	private static int state = 0;
+
+	public static synchronized int getState() {
+		return state;
+	}
+
+	public static synchronized void setState(int s) {
+		state = s;
+	}
+
+	public static volatile MainOffice instance = null;
 	public static boolean isFinished;
 	public static final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-	public static final String filePath = new File("").getAbsolutePath()+"\\src\\components\\tracking.txt";
+	public static final String filePath = new File("").getAbsolutePath() + "\\src\\components\\tracking.txt";
+	public static final String filePathCopy = new File("").getAbsolutePath() + "\\src\\components\\trackingCopy.txt";
 	public static Random rand = new Random();
 	private static int clock = 0;
-	//Instance fields
+	// Instance fields
 	private final int numOfPackages;
 	private Hub hub;
 	private Vector<Package> packages;
@@ -53,27 +57,32 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	private FileWriter file;
 	private PrintWriter writer;
 	private BufferedReader reader;
-	private int lineNum;
-	//Methods or Functions
+	int lineNum;
+
+	// Methods or Functions
 	public static MainOffice getInstance() {
 		if (instance == null) {
-            synchronized (MainOffice.class) {
-                if (instance == null) {
-                    instance = new MainOffice(5,5,50);
-                }
-            }
-        }
-        return instance;
+			synchronized (MainOffice.class) {
+				if (instance == null) {
+					instance = new MainOffice(5, 5, 50);
+				}
+			}
+		}
+		return instance;
 	}
+
 	public void setMainOffice(State s) {
+		restoreTrackingTXT();
 		setClock(s.clock);
 		setPackages(s.packages);
 		setCustomers(s.customers);
-		setLineNum(s.lineNum);
+		lineNum = s.lineNum;
 		hub.setHub(s.hub);
 	}
+
 	/**
-	 * Constructor for the class MainOffice. Changed to double-checked singleton in part 3 of the project
+	 * Constructor for the class MainOffice. Changed to double-checked singleton in
+	 * part 3 of the project
 	 * <p>
 	 * The hub is always created first, afterwards we add 'trucksForBranch' amount
 	 * of trucks to it, then a single NonStandardTruck. Afterwards, a 'branches'
@@ -83,9 +92,14 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 *                        the hub.
 	 * @param trucksForBranch - integer representing how many trucks each branch
 	 *                        (and the hub) will have.
-	 * @param numOfPackages - integer representing how many packages will be generated in the simulation
+	 * @param numOfPackages   - integer representing how many packages will be
+	 *                        generated in the simulation
 	 */
 	private MainOffice(int branches, int trucksForBranch, int numOfPackages) {
+		try {
+			Files.delete(new File(filePath).toPath());
+		} catch (IOException e1) {
+		}
 		Branch.numBranch = -1;
 		hub = new Hub();
 		hub.resetHub();
@@ -114,15 +128,15 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		}
 		packages = new Vector<Package>();
 		customers = new ArrayList<Customer>();
-		for(int i=0; i<10;i++)
+		for (int i = 0; i < 10; i++)
 			customers.add(new Customer(branches));
 		executor = Executors.newFixedThreadPool(2);
 	}
 
 	/**
-	 * This function starts all threads by using startAllThreads() method
-	 *  that representing Trucks/Branches/Hub.. etc
-	 * then simulates our whole system after Button "Start" in GUI was pressed.
+	 * This function starts all threads by using startAllThreads() method that
+	 * representing Trucks/Branches/Hub.. etc then simulates our whole system after
+	 * Button "Start" in GUI was pressed.
 	 * <p>
 	 * Using the parameter 'playTime', we activate the function tick to simulate
 	 * both activity in the system (in the form of the function work() ) and to
@@ -242,7 +256,7 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 */
 	public void setPackages(Vector<Package> packages) {
 		this.packages = packages;
-		for(Package p:packages)
+		for (Package p : this.packages)
 			p.registerListener();
 	}
 
@@ -262,9 +276,6 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 		clock++;
 	}
 
-
-	
-
 	/**
 	 * This function associates a given package to the correct branch.
 	 * <p>
@@ -283,9 +294,10 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 					break;
 				}
 	}
+
 	/**
-	 * This function checks if system can finish the work 
-	 * (if all packages has statuses Delivered and if all packages generated)
+	 * This function checks if system can finish the work (if all packages has
+	 * statuses Delivered and if all packages generated)
 	 * <p>
 	 * 
 	 * 
@@ -293,12 +305,13 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 */
 	private boolean checkIfFinished() {
 		for (Package p : packages) {
-			if (!(p.getStatus().equals(Status.DELIVERED)) || packages.size()< this.numOfPackages) {
+			if (!(p.getStatus().equals(Status.DELIVERED)) || packages.size() < this.numOfPackages) {
 				return false;
 			}
 		}
 		return true;
 	}
+
 	/**
 	 * Starter for all threads that representing different object in delivery system
 	 * like branches/trucks/hub ... etc
@@ -306,112 +319,149 @@ public class MainOffice implements Runnable,PropertyChangeListener{
 	 */
 	public void startAllThreads() {
 		DeliveryGUI.getDeliveryGUI().startDisplayThread();
-		for (Branch b:hub.getBranches()) {
+		for (Branch b : hub.getBranches()) {
 			b.startAllTrucks();
 		}
 		startCustomers();
 		hub.startAllBranches();
 		hub.startAllTrucks();
 	}
+
 	public void resetThreads() {
 		resetCustomers();
-		for (Branch b:hub.getBranches()) {
+		for (Branch b : hub.getBranches()) {
 			b.startAllTrucks();
 		}
 		startCustomers();
 		hub.startAllBranches();
 		hub.startAllTrucks();
 	}
+
 	public void stopCustomers() {
 		((ExecutorService) executor).shutdownNow();
-		while(!((ExecutorService) executor).isTerminated()) {
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
+
 	/**
-	 * This method implements Runnable interface. 
-	 * just used to run a play() method in Thread.
+	 * This method implements Runnable interface. just used to run a play() method
+	 * in Thread.
 	 */
 	public void run() {
 		play();
 	}
+
 	public void startCustomers() {
-		for (Customer c: customers){
+		for (Customer c : customers) {
 			executor.execute(c);
 		}
 	}
+
 	public void resetCustomers() {
 		executor = Executors.newFixedThreadPool(2);
 		startCustomers();
 	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		Package p = (Package)evt.getSource();
+		Package p = (Package) evt.getSource();
 		rwl.writeLock().lock();
-		writer.println(lineNum++ +":   "+"Sender ID: " +p.customerId+ " Package:"+ p.getPackageID() + " Status: " + p.getStatus());
+		writer.println(lineNum++ + ":   " + "Sender ID: " + p.customerId + " Package:" + p.getPackageID() + " Status: "
+				+ p.getStatus());
 		writer.flush();
 		rwl.writeLock().unlock();
 	}
+
 	public boolean checkIfAllPackagesDeliveredByCustomerId(Integer customerId) {
-		int deliveredCounter =0;
+		int deliveredCounter = 0;
 		try {
-			reader = new BufferedReader (new FileReader(filePath));
+			reader = new BufferedReader(new FileReader(filePath));
 		} catch (FileNotFoundException e1) {
 		}
 		rwl.readLock().lock();
 		String line = "";
 		try {
-			while(deliveredCounter<5 && (line=reader.readLine()) !=null) {
-				if(checkIfDeliveredInStringByCustomerId(line,"Sender ID: "+customerId.toString()))
+			while (deliveredCounter < 5 && (line = reader.readLine()) != null) {
+				if (checkIfDeliveredInStringByCustomerId(line, "Sender ID: " + customerId.toString()))
 					deliveredCounter++;
 			}
 		} catch (IOException e) {
 		}
+
 		rwl.readLock().unlock();
 		try {
 			reader.close();
 		} catch (IOException e) {
+			return deliveredCounter == 5;
 		}
 		return deliveredCounter == 5;
 	}
+
 	public boolean checkIfDeliveredInStringByCustomerId(String line, String customer) {
-		if(!line.contains(customer) || !line.contains("DELIVERED"))
+		if (!line.contains(customer) || !line.contains("DELIVERED"))
 			return false;
 		return true;
-		
+
 	}
+
 	public ArrayList<Customer> getCustomers() {
 		return customers;
 	}
-	public int getLineNum() {
-		return lineNum;
-	}
+
 	public Hub getHub() {
 		return hub;
 	}
+
 	public void setHub(Hub hub) {
 		this.hub = hub;
 	}
+
 	public void setCustomers(ArrayList<Customer> customers) {
 		this.customers = customers;
 	}
-	public void setLineNum(int lineNum) {
-		this.lineNum = lineNum;
-	}
+
 	public static void setClock(int clock) {
 		MainOffice.clock = clock;
 	}
+
 	public void stopThreads() {
 		stopCustomers();
-		for (Branch b:hub.getBranches()) {
+		for (Branch b : hub.getBranches()) {
 			b.stopAllTrucks();
 		}
 		hub.stopAllTrucks();
 		hub.stopAllBranches();
 	}
-	
+
+	private void restoreTrackingTXT() {
+		File dest = new File(MainOffice.filePath);
+		File source = new File(MainOffice.filePathCopy);
+		rwl.writeLock().lock();
+		try {
+			if (writer != null)
+				writer.close();
+			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rwl.writeLock().unlock();
+		try {
+			file = new FileWriter(filePath, true);
+			writer = new PrintWriter(file);
+		} catch (IOException e) {
+		}
+	}
+
+	public void CopyTrackingTXT() {
+		File source = new File(MainOffice.filePath);
+		File dest = new File(MainOffice.filePathCopy);
+		rwl.readLock().lock();
+		try {
+			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		rwl.readLock().unlock();
+
+	}
 }

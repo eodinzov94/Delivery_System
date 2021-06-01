@@ -83,25 +83,26 @@ public class Customer implements Node, Runnable {
 			isFinished = true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		System.out.println(getNodeName() + "  started create packages");
 		int currentState = MainOffice.getState();
 		if(packCreated==5 && isFinished)
-			return;
+			Thread.currentThread().stop();
 		while (packCreated < 5) {
 			try {
 				DeliveryGUI.pauser.look();
 				if (currentState != MainOffice.getState()) {
 					System.out.println("Thread:"
 							+ Thread.currentThread().getId() + "Terminated");
-					return;
+					Thread.currentThread().stop();
 				}
 				createPackage();
 				System.out.println(getNodeName() + "  created package");
 				Thread.sleep((MainOffice.getRand().nextInt(4) + 2) * 1000);
 			} catch (InterruptedException ignored) {
-				return;
+				Thread.currentThread().stop();
 			}
 		}
 		while (!isFinished) {
@@ -110,12 +111,12 @@ public class Customer implements Node, Runnable {
 				if (currentState != MainOffice.getState()) {
 					System.out.println("Thread:"
 							+ Thread.currentThread().getId() + "Terminated");
-					return;
+					Thread.currentThread().stop();
 				}
 				checkFinished();
 				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
-				return;
+				Thread.currentThread().stop();
 			}
 		}
 	}

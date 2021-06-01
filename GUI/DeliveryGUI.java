@@ -4,11 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
+
 
 import javax.swing.*;
 
-import components.Branch;
 import components.MainOffice;
 import components.Originator;
 import components.Pauser;
@@ -162,14 +161,21 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		else if(bName.equals("Clone branch") && numOfBranches < 8) {
 			stopAllThreads();
 			try {
-				Thread.sleep(600L);
+				Thread.sleep(500L);
 			} catch (InterruptedException e1) {
 			}
 			Originator.createState();
 			numOfBranches++;
 			new CloneDialog();
-			resumeAllThreads();
+			//resumeAllThreads();
 			System.out.println("-------------------------Clone---------------------");
+			try {
+				Thread.sleep(100);
+				printThreadsInfo();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
 			System.out.println("-------------------------RESTORE---------------------");
@@ -185,8 +191,14 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			Originator.setState();
 			numOfBranches--;
 			MainOffice.getInstance().resetThreads();
-			resumeAllThreads();
-			printThreadsInfo();
+			//resumeAllThreads();
+			try {
+				Thread.sleep(100);
+				printThreadsInfo();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	
@@ -329,7 +341,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 		this.isClickedBranchInfo = isClickedBranchInfo;
 	}
 	public void printThreadsInfo() {
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 		System.out.println("--------Thread Info------Active Threads:"+Thread.activeCount());
 	}
 }
