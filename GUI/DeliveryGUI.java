@@ -158,7 +158,14 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			} catch (IOException e1) {
 			}
 		}
-		else if(bName.equals("Clone branch") && numOfBranches < 8) {
+		else if(bName.equals("Clone branch") && numOfBranches < 6) {
+			while(MainOffice.getRwl().hasQueuedThreads())
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 			stopAllThreads();
 			try {
 				Thread.sleep(500L);
@@ -167,7 +174,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			Originator.createState();
 			numOfBranches++;
 			new CloneDialog();
-			//resumeAllThreads();
+			resumeAllThreads();
 			System.out.println("-------------------------Clone---------------------");
 			try {
 				Thread.sleep(100);
@@ -191,7 +198,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			Originator.setState();
 			numOfBranches--;
 			MainOffice.getInstance().resetThreads();
-			//resumeAllThreads();
+			resumeAllThreads();
 			try {
 				Thread.sleep(100);
 				printThreadsInfo();

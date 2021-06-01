@@ -24,7 +24,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private boolean isHidden;
-	int numBranches = 8, numPackages = 50, numTrucks = 5;
+	int numBranches = 6, numPackages = 50, numTrucks = 5;
 	static private ArrayList<DrawBranch> allBranches;
 	static private ArrayList<DrawPackage> allPackages;
 	static private ArrayList<DrawTruck> allTrucks;
@@ -108,9 +108,9 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		allBranches = new ArrayList<DrawBranch>();
 		allBranches.add(new DrawHub(-1));
 		for (int i = 0; i < numBranches; i++) {
-			Point start = new Point(30, 70 + i * branchesStep());
+			Point start = new Point(30, 150 + i * branchesStep());
 			Point pEnd = new Point(1800, 310 + i * hubLinesStep());
-			Point pStart = new Point(70, 85 + i * branchesStep());
+			Point pStart = new Point(70, 165 + i * branchesStep());
 			DrawPath dp = new DrawPath(pStart, pEnd, DrawHub.getHubColor());
 			DrawBranch db = new DrawBranch(start, dp, i);
 			allBranches.add(db);
@@ -177,7 +177,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	 */
 	public int branchesStep() {
 		if (numBranches > 1)
-			return 450 /5;
+			return 450 /numBranches-1;
 		return 450;
 	}
 
@@ -199,7 +199,7 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 	 */
 	public int hubLinesStep() {
 		if (numBranches > 1)
-			return 160 / (7);
+			return 160 / (numBranches-1);
 		return 160;
 	}
 

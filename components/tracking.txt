@@ -1,70 +1,110 @@
-1:   Sender ID: 1 Package:1000 Status: CREATION
-2:   Sender ID: 2 Package:1001 Status: CREATION
-3:   Sender ID: 1 Package:1000 Status: COLLECTION
-4:   Sender ID: 2 Package:1001 Status: COLLECTION
-5:   Sender ID: 2 Package:1001 Status: BRANCH_STORAGE
-6:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-7:   Sender ID: 2 Package:1002 Status: CREATION
-8:   Sender ID: 2 Package:1002 Status: COLLECTION
-9:   Sender ID: 2 Package:1003 Status: CREATION
-10:   Sender ID: 2 Package:1002 Status: DISTRIBUTION
-11:   Sender ID: 1 Package:1004 Status: CREATION
-12:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-13:   Sender ID: 1 Package:1004 Status: COLLECTION
-14:   Sender ID: 1 Package:1005 Status: CREATION
-15:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-16:   Sender ID: 1 Package:1005 Status: COLLECTION
-17:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-18:   Sender ID: 1 Package:1004 Status: BRANCH_STORAGE
-19:   Sender ID: 2 Package:1006 Status: CREATION
-20:   Sender ID: 1 Package:1005 Status: BRANCH_STORAGE
-21:   Sender ID: 2 Package:1002 Status: DISTRIBUTION
-22:   Sender ID: 2 Package:1003 Status: COLLECTION
-23:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-24:   Sender ID: 1 Package:1004 Status: BRANCH_STORAGE
-25:   Sender ID: 1 Package:1005 Status: BRANCH_STORAGE
-26:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-27:   Sender ID: 1 Package:1004 Status: HUB_TRANSPORT
-28:   Sender ID: 1 Package:1005 Status: HUB_TRANSPORT
-29:   Sender ID: 2 Package:1007 Status: CREATION
-30:   Sender ID: 1 Package:1008 Status: CREATION
-31:   Sender ID: 2 Package:1007 Status: COLLECTION
-32:   Sender ID: 1 Package:1008 Status: COLLECTION
-33:   Sender ID: 2 Package:1007 Status: BRANCH_STORAGE
-34:   Sender ID: 1 Package:1009 Status: CREATION
-35:   Sender ID: 2 Package:1003 Status: DISTRIBUTION
-36:   Sender ID: 1 Package:1008 Status: BRANCH_STORAGE
-37:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-38:   Sender ID: 2 Package:1007 Status: BRANCH_STORAGE
-39:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-40:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-41:   Sender ID: 1 Package:1004 Status: HUB_STORAGE
-42:   Sender ID: 1 Package:1005 Status: HUB_STORAGE
-43:   Sender ID: 2 Package:1007 Status: HUB_TRANSPORT
-44:   Sender ID: 1 Package:1008 Status: BRANCH_STORAGE
-45:   Sender ID: 2 Package:1003 Status: DELIVERED
-46:   Sender ID: 2 Package:1006 Status: COLLECTION
-47:   Sender ID: 2 Package:1001 Status: BRANCH_TRANSPORT
-48:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-49:   Sender ID: 1 Package:1004 Status: BRANCH_TRANSPORT
-50:   Sender ID: 1 Package:1005 Status: BRANCH_TRANSPORT
-51:   Sender ID: 1 Package:1008 Status: HUB_TRANSPORT
-52:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-53:   Sender ID: 1 Package:1004 Status: DISTRIBUTION
-54:   Sender ID: 1 Package:1005 Status: DISTRIBUTION
-55:   Sender ID: 2 Package:1007 Status: HUB_STORAGE
-56:   Sender ID: 1 Package:1008 Status: HUB_STORAGE
-57:   Sender ID: 1 Package:1004 Status: DELIVERED
-58:   Sender ID: 2 Package:1006 Status: DISTRIBUTION
-59:   Sender ID: 1 Package:1005 Status: DELIVERED
-60:   Sender ID: 2 Package:1006 Status: DELIVERED
-61:   Sender ID: 1 Package:1009 Status: COLLECTION
-62:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
-63:   Sender ID: 1 Package:1009 Status: DISTRIBUTION
-64:   Sender ID: 2 Package:1007 Status: BRANCH_TRANSPORT
-65:   Sender ID: 2 Package:1007 Status: DISTRIBUTION
-66:   Sender ID: 1 Package:1008 Status: BRANCH_TRANSPORT
-67:   Sender ID: 1 Package:1008 Status: DISTRIBUTION
-68:   Sender ID: 2 Package:1007 Status: DELIVERED
-69:   Sender ID: 1 Package:1009 Status: DELIVERED
-70:   Sender ID: 1 Package:1008 Status: DELIVERED
+1:   Sender ID: 1 Package:1000 Status: CREATION writed by Thread: 49
+2:   Sender ID: 2 Package:1001 Status: CREATION writed by Thread: 50
+3:   Sender ID: 1 Package:1000 Status: COLLECTION writed by Thread: 52
+4:   Sender ID: 2 Package:1001 Status: COLLECTION writed by Thread: 51
+5:   Sender ID: 2 Package:1001 Status: BRANCH_STORAGE writed by Thread: 24
+6:   Sender ID: 1 Package:1002 Status: CREATION writed by Thread: 69
+7:   Sender ID: 2 Package:1003 Status: CREATION writed by Thread: 70
+8:   Sender ID: 1 Package:1002 Status: COLLECTION writed by Thread: 101
+9:   Sender ID: 2 Package:1003 Status: COLLECTION writed by Thread: 96
+10:   Sender ID: 2 Package:1003 Status: BRANCH_STORAGE writed by Thread: 71
+11:   Sender ID: 1 Package:1004 Status: CREATION writed by Thread: 69
+12:   Sender ID: 1 Package:1004 Status: COLLECTION writed by Thread: 97
+13:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 76
+14:   Sender ID: 1 Package:1002 Status: DISTRIBUTION writed by Thread: 102
+15:   Sender ID: 2 Package:1005 Status: CREATION writed by Thread: 70
+16:   Sender ID: 1 Package:1002 Status: DELIVERED writed by Thread: 102
+17:   Sender ID: 2 Package:1005 Status: COLLECTION writed by Thread: 101
+18:   Sender ID: 1 Package:1006 Status: CREATION writed by Thread: 69
+19:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 103
+20:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 106
+21:   Sender ID: 2 Package:1003 Status: BRANCH_STORAGE writed by Thread: 106
+22:   Sender ID: 1 Package:1006 Status: COLLECTION writed by Thread: 97
+23:   Sender ID: 2 Package:1007 Status: CREATION writed by Thread: 70
+24:   Sender ID: 2 Package:1007 Status: COLLECTION writed by Thread: 96
+25:   Sender ID: 1 Package:1004 Status: BRANCH_STORAGE writed by Thread: 77
+26:   Sender ID: 1 Package:1008 Status: CREATION writed by Thread: 69
+27:   Sender ID: 2 Package:1005 Status: DISTRIBUTION writed by Thread: 102
+28:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 106
+29:   Sender ID: 2 Package:1003 Status: HUB_TRANSPORT writed by Thread: 106
+30:   Sender ID: 2 Package:1007 Status: BRANCH_STORAGE writed by Thread: 71
+31:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 103
+32:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 101
+33:   Sender ID: 2 Package:1003 Status: HUB_STORAGE writed by Thread: 101
+34:   Sender ID: 1 Package:1006 Status: BRANCH_STORAGE writed by Thread: 76
+35:   Sender ID: 2 Package:1009 Status: CREATION writed by Thread: 70
+36:   Sender ID: 2 Package:1009 Status: COLLECTION writed by Thread: 96
+37:   Sender ID: 2 Package:1007 Status: BRANCH_STORAGE writed by Thread: 105
+38:   Sender ID: 2 Package:1007 Status: HUB_TRANSPORT writed by Thread: 105
+39:   Sender ID: 2 Package:1005 Status: DELIVERED writed by Thread: 102
+40:   Sender ID: 1 Package:1008 Status: COLLECTION writed by Thread: 101
+41:   Sender ID: 2 Package:1009 Status: BRANCH_STORAGE writed by Thread: 71
+42:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 107
+43:   Sender ID: 2 Package:1003 Status: BRANCH_TRANSPORT writed by Thread: 107
+44:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 98
+45:   Sender ID: 2 Package:1003 Status: DISTRIBUTION writed by Thread: 98
+46:   Sender ID: 2 Package:1001 Status: DELIVERED writed by Thread: 81
+47:   Sender ID: 1 Package:1004 Status: BRANCH_STORAGE writed by Thread: 103
+48:   Sender ID: 1 Package:1006 Status: BRANCH_STORAGE writed by Thread: 103
+49:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 101
+50:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 104
+51:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 100
+52:   Sender ID: 2 Package:1007 Status: HUB_STORAGE writed by Thread: 101
+53:   Sender ID: 2 Package:1003 Status: DELIVERED writed by Thread: 82
+54:   Sender ID: 1 Package:1008 Status: DISTRIBUTION writed by Thread: 102
+55:   Sender ID: 1 Package:1004 Status: HUB_TRANSPORT writed by Thread: 103
+56:   Sender ID: 1 Package:1006 Status: HUB_TRANSPORT writed by Thread: 103
+57:   Sender ID: 2 Package:1007 Status: BRANCH_TRANSPORT writed by Thread: 104
+58:   Sender ID: 2 Package:1009 Status: BRANCH_STORAGE writed by Thread: 106
+59:   Sender ID: 2 Package:1007 Status: DISTRIBUTION writed by Thread: 98
+60:   Sender ID: 1 Package:1006 Status: HUB_STORAGE writed by Thread: 101
+61:   Sender ID: 1 Package:1004 Status: HUB_STORAGE writed by Thread: 101
+62:   Sender ID: 1 Package:1000 Status: DELIVERED writed by Thread: 91
+63:   Sender ID: 2 Package:1009 Status: HUB_TRANSPORT writed by Thread: 106
+64:   Sender ID: 3 Package:1010 Status: CREATION writed by Thread: 70
+65:   Sender ID: 3 Package:1010 Status: COLLECTION writed by Thread: 100
+66:   Sender ID: 2 Package:1007 Status: DELIVERED writed by Thread: 81
+67:   Sender ID: 1 Package:1006 Status: BRANCH_TRANSPORT writed by Thread: 103
+68:   Sender ID: 1 Package:1006 Status: DISTRIBUTION writed by Thread: 99
+69:   Sender ID: 4 Package:1011 Status: CREATION writed by Thread: 69
+70:   Sender ID: 4 Package:1011 Status: COLLECTION writed by Thread: 96
+71:   Sender ID: 1 Package:1008 Status: DELIVERED writed by Thread: 102
+72:   Sender ID: 3 Package:1012 Status: CREATION writed by Thread: 70
+73:   Sender ID: 3 Package:1012 Status: COLLECTION writed by Thread: 101
+74:   Sender ID: 1 Package:1004 Status: BRANCH_TRANSPORT writed by Thread: 105
+75:   Sender ID: 4 Package:1011 Status: BRANCH_STORAGE writed by Thread: 71
+76:   Sender ID: 1 Package:1004 Status: DISTRIBUTION writed by Thread: 96
+77:   Sender ID: 3 Package:1010 Status: BRANCH_STORAGE writed by Thread: 91
+78:   Sender ID: 3 Package:1010 Status: BRANCH_STORAGE writed by Thread: 104
+79:   Sender ID: 4 Package:1013 Status: CREATION writed by Thread: 69
+80:   Sender ID: 3 Package:1014 Status: CREATION writed by Thread: 70
+81:   Sender ID: 1 Package:1006 Status: DELIVERED writed by Thread: 86
+82:   Sender ID: 4 Package:1013 Status: COLLECTION writed by Thread: 96
+83:   Sender ID: 3 Package:1014 Status: COLLECTION writed by Thread: 100
+84:   Sender ID: 3 Package:1012 Status: DISTRIBUTION writed by Thread: 102
+85:   Sender ID: 2 Package:1009 Status: HUB_STORAGE writed by Thread: 101
+86:   Sender ID: 3 Package:1010 Status: HUB_TRANSPORT writed by Thread: 104
+87:   Sender ID: 3 Package:1010 Status: HUB_STORAGE writed by Thread: 101
+88:   Sender ID: 4 Package:1013 Status: BRANCH_STORAGE writed by Thread: 71
+89:   Sender ID: 3 Package:1010 Status: BRANCH_TRANSPORT writed by Thread: 104
+90:   Sender ID: 1 Package:1004 Status: DELIVERED writed by Thread: 72
+91:   Sender ID: 3 Package:1010 Status: DISTRIBUTION writed by Thread: 97
+92:   Sender ID: 3 Package:1012 Status: DELIVERED writed by Thread: 102
+93:   Sender ID: 2 Package:1009 Status: BRANCH_TRANSPORT writed by Thread: 106
+94:   Sender ID: 4 Package:1011 Status: BRANCH_STORAGE writed by Thread: 106
+95:   Sender ID: 4 Package:1013 Status: BRANCH_STORAGE writed by Thread: 106
+96:   Sender ID: 2 Package:1009 Status: DISTRIBUTION writed by Thread: 96
+97:   Sender ID: 3 Package:1014 Status: BRANCH_STORAGE writed by Thread: 91
+98:   Sender ID: 3 Package:1015 Status: CREATION writed by Thread: 70
+99:   Sender ID: 4 Package:1016 Status: CREATION writed by Thread: 69
+100:   Sender ID: 3 Package:1015 Status: COLLECTION writed by Thread: 100
+101:   Sender ID: 4 Package:1016 Status: COLLECTION writed by Thread: 96
+102:   Sender ID: 4 Package:1011 Status: HUB_TRANSPORT writed by Thread: 106
+103:   Sender ID: 4 Package:1013 Status: HUB_TRANSPORT writed by Thread: 106
+104:   Sender ID: 4 Package:1011 Status: HUB_STORAGE writed by Thread: 101
+105:   Sender ID: 2 Package:1009 Status: DELIVERED writed by Thread: 71
+106:   Sender ID: 4 Package:1017 Status: CREATION writed by Thread: 69
+107:   Sender ID: 3 Package:1018 Status: CREATION writed by Thread: 70
+108:   Sender ID: 4 Package:1016 Status: BRANCH_STORAGE writed by Thread: 72
+109:   Sender ID: 4 Package:1017 Status: COLLECTION writed by Thread: 96
+110:   Sender ID: 3 Package:1018 Status: COLLECTION writed by Thread: 101

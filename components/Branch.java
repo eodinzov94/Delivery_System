@@ -476,14 +476,14 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		
 	}
 	public void linkPackages() {
-		for (Package p: listPackages) {
-			for(Package origin: MainOffice.getInstance().getPackages()) {
-				if(p.equals(origin)) {
-					p = origin;
+		for (int i=0;i<this.listPackages.size() ;i++) {
+			for (Package origin : MainOffice.getInstance().getPackages()) {
+				if (listPackages.get(i).equals(origin)) {
+					listPackages.set(i,origin); 
 					break;
 				}
 			}
-	
+
 		}
 	}
 	@SuppressWarnings("deprecation")
@@ -491,5 +491,4 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		for( Thread t: truckThreads)
 			t.stop();
 	}
-
 }

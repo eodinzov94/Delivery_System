@@ -79,7 +79,6 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		lineNum = s.lineNum;
 		hub.setHub(s.hub);
 	}
-
 	/**
 	 * Constructor for the class MainOffice. Changed to double-checked singleton in
 	 * part 3 of the project
@@ -365,18 +364,18 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		Package p = (Package) evt.getSource();
 		rwl.writeLock().lock();
 		writer.println(lineNum++ + ":   " + "Sender ID: " + p.customerId + " Package:" + p.getPackageID() + " Status: "
-				+ p.getStatus());
+				+ p.getStatus() + " writed by Thread: "+Thread.currentThread().getId());
 		writer.flush();
 		rwl.writeLock().unlock();
 	}
 
 	public boolean checkIfAllPackagesDeliveredByCustomerId(Integer customerId) {
 		int deliveredCounter = 0;
+		rwl.readLock().lock();
 		try {
 			reader = new BufferedReader(new FileReader(filePath));
 		} catch (FileNotFoundException e1) {
 		}
-		rwl.readLock().lock();
 		String line = "";
 		try {
 			while (deliveredCounter < 5 && (line = reader.readLine()) != null) {
@@ -386,12 +385,12 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		} catch (IOException e) {
 		}
 
-		rwl.readLock().unlock();
 		try {
 			reader.close();
 		} catch (IOException e) {
 			return deliveredCounter == 5;
 		}
+		rwl.readLock().unlock();
 		return deliveredCounter == 5;
 	}
 
@@ -438,6 +437,7 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		try {
 			if (writer != null)
 				writer.close();
+			Files.delete(dest.toPath());
 			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -452,16 +452,27 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 	}
 
 	public void CopyTrackingTXT() {
+		try {
+			Thread.sleep(150);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		File source = new File(MainOffice.filePath);
 		File dest = new File(MainOffice.filePathCopy);
-		rwl.readLock().lock();
+		rwl.writeLock().lock();
 		try {
+			
 			Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		rwl.readLock().unlock();
+		rwl.writeLock().unlock();
 
+	}
+
+	public static ReentrantReadWriteLock getRwl() {
+		return rwl;
 	}
 }

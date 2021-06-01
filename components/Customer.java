@@ -114,6 +114,7 @@ public class Customer implements Node, Runnable {
 					Thread.currentThread().stop();
 				}
 				checkFinished();
+				System.out.println(getNodeName() + "  waiting for packages to deliver");
 				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
 				Thread.currentThread().stop();

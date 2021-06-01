@@ -321,14 +321,15 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	}
 
 	public void linkPackages() {
-		for (Package p : this.packages) {
+		for (int i=0;i<this.packages.size() ;i++) {
 			for (Package origin : MainOffice.getInstance().getPackages()) {
-				if (p.equals(origin)) {
-					p = origin;
+				if (packages.get(i).equals(origin)) {
+					packages.set(i,origin); 
 					break;
 				}
 			}
 
 		}
 	}
+	
 }

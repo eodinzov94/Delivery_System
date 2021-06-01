@@ -62,10 +62,8 @@ public abstract class Package implements Observable{
 		this.senderAddress = other.senderAddress;
 		this.destinationAddress = other.destinationAddress;
 		this.tracking = new ArrayList<Tracking>(other.getTracking());
-		
 		this.packageID = other.getPackageID();
 		this.status = other.getStatus();
-		registerListener();
 		customerId = other.customerId;
 		support = other.support;
 	}

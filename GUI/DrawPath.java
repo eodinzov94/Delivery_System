@@ -2,6 +2,8 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 /**
  * This class represents a Path between 2 objects that are displayed on the GUI
@@ -104,8 +106,10 @@ public class DrawPath extends DrawObject {
 	public void paintComponent(Graphics g) {
 		if(isHidden)
 			return;
-		g.setColor(this.getColor());
-		g.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
+		Graphics2D gr = (Graphics2D)g;
+		gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		gr.setColor(this.getColor());
+		gr.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
 	}
 
 	public boolean isHidden() {
