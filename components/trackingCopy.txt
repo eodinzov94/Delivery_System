@@ -1,0 +1,8 @@
+1:   Sender ID: 1 Package:1000 Status: CREATION
+2:   Sender ID: 2 Package:1001 Status: CREATION
+3:   Sender ID: 1 Package:1000 Status: COLLECTION
+4:   Sender ID: 2 Package:1001 Status: COLLECTION
+5:   Sender ID: 2 Package:1001 Status: BRANCH_STORAGE
+6:   Sender ID: 1 Package:1000 Status: BRANCH_STORAGE
+7:   Sender ID: 2 Package:1002 Status: CREATION
+8:   Sender ID: 2 Package:1002 Status: COLLECTION

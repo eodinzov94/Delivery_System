@@ -1,5 +1,7 @@
 package components;
 
+
+
 import GUI.DeliveryGUI;
 import GUI.DrawTruck;
 public class Originator {
@@ -16,6 +18,7 @@ public class Originator {
 		DeliveryGUI.getDeliveryGUI().getDisplay().setState(s);
 		MainOffice.getInstance().setMainOffice(s);
 	}
+
 	
 }
 

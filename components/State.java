@@ -2,8 +2,6 @@ package components;
 
 import java.util.ArrayList;
 import java.util.Vector;
-
-
 import GUI.DisplayPanel;
 import GUI.DrawBranch;
 import GUI.DrawHub;
@@ -27,6 +25,7 @@ public class State {
 	public Integer state;
 	public int numTrucks,numOfPackages,numDrawTrucks;
 	public State() {
+		lineNum = MainOffice.getInstance().lineNum;
 		numTrucks = Truck.numTrucks ;
 		numOfPackages = Package.numOfPackages;
 		numDrawTrucks = DrawTruck.numTrucks;
@@ -66,5 +65,8 @@ public class State {
 				allDrawTrucks.add(new DrawNonStandardTruck((DrawNonStandardTruck) t));
 		}
 		drawPaths = new Vector<DrawPath>(DisplayPanel.getPaths());
+		MainOffice.getInstance().CopyTrackingTXT();
 	}
+	
+	
 }

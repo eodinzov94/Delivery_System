@@ -1,9 +1,7 @@
 package components;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 import GUI.DrawPackage;
 import GUI.DrawTruck;
@@ -253,6 +251,9 @@ public class Hub extends Branch implements Node {
 		clone.registerListener();
 		clone.startAllTrucks();
 		addBranch(clone);
+		Thread t = new Thread(clone);
+		t.start();
+		branchThreads.add(t);
 	}
 
 	/**
@@ -282,7 +283,6 @@ public class Hub extends Branch implements Node {
 
 	
 	public void setHub(Hub h) {
-		this.registerListener();
 		branches.remove(branches.size()-1);
 		for(int i=0; i<branches.size();i++) {
 			Branch newB = branches.get(i);
@@ -291,6 +291,7 @@ public class Hub extends Branch implements Node {
 		}
 		this.setBranch(h);
 	}
+	@SuppressWarnings("deprecation")
 	public void stopAllBranches() {
 		for( Thread t: branchThreads)
 			t.stop();

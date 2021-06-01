@@ -2,10 +2,6 @@ package components;
 
 import java.util.ArrayList;
 import java.util.Vector;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import GUI.DeliveryGUI;
 import GUI.DisplayPanel;
 import GUI.DrawBranch;
@@ -49,7 +45,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 
 	public Branch(Branch other) {
 		this.branchId = other.getBranchId();
-		this.branchName = "Branch " + branchId;
+		this.branchName = other.branchName;
 		truckThreads = new ArrayList<Thread>();
 		this.listTrucks = new ArrayList<Truck>();
 		for (Truck t : other.getListTrucks()) {
@@ -70,7 +66,6 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 				listPackages.add(new NonStandardPackage(p));
 		}
 		System.out.println("Copying " + this);
-		registerListener();
 	}
 
 	/**
@@ -477,6 +472,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 			t.registerListener();
 			t.linkPackages();
 		}
+		this.registerListener();
 		
 	}
 	public void linkPackages() {
@@ -490,6 +486,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 	
 		}
 	}
+	@SuppressWarnings("deprecation")
 	public void stopAllTrucks() {
 		for( Thread t: truckThreads)
 			t.stop();
