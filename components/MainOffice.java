@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import GUI.DeliveryGUI;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -159,7 +158,7 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 			}
 		}
 		isFinished = true;
-		((ExecutorService) executor).shutdown();
+		((ExecutorService) executor).shutdownNow();
 		DeliveryGUI.getDeliveryGUI().getDisplay().run();
 		System.out.println("========================== STOP ==========================");
 		this.printReport();
@@ -361,10 +360,11 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		String status = evt.getPropertyName();
 		Package p = (Package) evt.getSource();
 		rwl.writeLock().lock();
 		writer.println(lineNum++ + ":   " + "Sender ID: " + p.customerId + " Package:" + p.getPackageID() + " Status: "
-				+ p.getStatus() + " writed by Thread: "+Thread.currentThread().getId());
+				+ status);
 		writer.flush();
 		rwl.writeLock().unlock();
 	}
@@ -451,7 +451,7 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		}
 	}
 
-	public void CopyTrackingTXT() {
+	public File CopyTrackingTXT(String destination) {
 		try {
 			Thread.sleep(150);
 		} catch (InterruptedException e1) {
@@ -459,7 +459,10 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 			e1.printStackTrace();
 		}
 		File source = new File(MainOffice.filePath);
-		File dest = new File(MainOffice.filePathCopy);
+		File dest = null;
+		if(destination != null)
+			 dest = new File(destination);
+		else dest = new File(MainOffice.filePathCopy);
 		rwl.writeLock().lock();
 		try {
 			
@@ -469,6 +472,7 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 			e.printStackTrace();
 		}
 		rwl.writeLock().unlock();
+		return dest;
 
 	}
 

@@ -65,7 +65,7 @@ public class State {
 				allDrawTrucks.add(new DrawNonStandardTruck((DrawNonStandardTruck) t));
 		}
 		drawPaths = new Vector<DrawPath>(DisplayPanel.getPaths());
-		MainOffice.getInstance().CopyTrackingTXT();
+		MainOffice.getInstance().CopyTrackingTXT(null);
 	}
 	
 	

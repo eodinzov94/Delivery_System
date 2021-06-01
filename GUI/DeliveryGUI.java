@@ -152,20 +152,13 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 
 		}
 		else if(bName.equals("Report")) {
-			File file = new File(MainOffice.filePath);
 			try {
-				Desktop.getDesktop().edit(file);
+				Desktop.getDesktop().edit(MainOffice.getInstance().CopyTrackingTXT(new File("").getAbsolutePath() + "\\src\\components\\report.txt"));
 			} catch (IOException e1) {
 			}
 		}
 		else if(bName.equals("Clone branch") && numOfBranches < 6) {
-			while(MainOffice.getRwl().hasQueuedThreads())
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
+			
 			stopAllThreads();
 			try {
 				Thread.sleep(500L);
@@ -180,7 +173,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 				Thread.sleep(100);
 				printThreadsInfo();
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -191,7 +183,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			MainOffice.setState(MainOffice.getState() + 1);
@@ -203,7 +194,6 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 				Thread.sleep(100);
 				printThreadsInfo();
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

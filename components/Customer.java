@@ -86,7 +86,6 @@ public class Customer implements Node, Runnable {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
-		System.out.println(getNodeName() + "  started create packages");
 		int currentState = MainOffice.getState();
 		if(packCreated==5 && isFinished)
 			Thread.currentThread().stop();
@@ -99,7 +98,6 @@ public class Customer implements Node, Runnable {
 					Thread.currentThread().stop();
 				}
 				createPackage();
-				System.out.println(getNodeName() + "  created package");
 				Thread.sleep((MainOffice.getRand().nextInt(4) + 2) * 1000);
 			} catch (InterruptedException ignored) {
 				Thread.currentThread().stop();
@@ -114,7 +112,6 @@ public class Customer implements Node, Runnable {
 					Thread.currentThread().stop();
 				}
 				checkFinished();
-				System.out.println(getNodeName() + "  waiting for packages to deliver");
 				Thread.sleep(5000);
 			} catch (InterruptedException ignored) {
 				Thread.currentThread().stop();

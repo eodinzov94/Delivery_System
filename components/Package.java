@@ -54,7 +54,7 @@ public abstract class Package implements Observable{
 		customerId = c.getCustomerId();
 		support = new PropertyChangeSupport(this);
 		addPropertyChangeListener(MainOffice.getInstance());
-		support.firePropertyChange("Created", null, this);
+		support.firePropertyChange("CREATION", null, this);
 	}
 
 	public Package(Package other) {
@@ -80,7 +80,7 @@ public abstract class Package implements Observable{
 	void addTracking(Node node, Status status) {
 		Tracking newNode = new Tracking(MainOffice.getClock(), node, status);
 		tracking.add(newNode);
-		support.firePropertyChange("New Status", null, this);
+		support.firePropertyChange(status.toString(), null, this);
 	}
 
 	/**
