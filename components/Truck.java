@@ -15,7 +15,7 @@ import GUI.Observable;
  * @see NonStandardTruck
  * @see Node
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 1.0 -- 29.3.2021
+ * @version 3.0 -- 05.06.2021
  *
  *
  */
@@ -49,7 +49,11 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 		packages = new ArrayList<Package>();
 		registerListener();
 	}
-
+	/**
+	 * Copy Constructor for the class Truck.
+	 * 
+	 * ( Deep Copy )
+	 */
 	public Truck(Truck other) {
 		truckModel = other.getTruckModel();
 		licensePlate = other.getLicensePlate();
@@ -96,19 +100,31 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	public boolean isAvailable() {
 		return available;
 	}
-
+	/**
+	 * Setter for field - int truckID
+	 * 
+	 */
 	public void setTruckID(int truckID) {
 		this.truckID = truckID;
 	}
-
+	/**
+	 * Setter for field - String licensePlate
+	 * 
+	 */
 	public void setLicensePlate(String licensePlate) {
 		this.licensePlate = licensePlate;
 	}
-
+	/**
+	 * Setter for field- String truckModel
+	 * 
+	 */
 	public void setTruckModel(String truckModel) {
 		this.truckModel = truckModel;
 	}
-
+	/**
+	 * Setter for field - ArrayList<Package> packages
+	 * 
+	 */
 	public void setPackages(ArrayList<Package> packages) {
 		this.packages = packages;
 	}
@@ -141,7 +157,7 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	 */
 	public void setTimeLeft(int timeLeft) {
 		if (timeLeft > 0)
-			this.timeLeft = timeLeft;// *10 for the 2nd part of the project
+			this.timeLeft = timeLeft*3;
 	}
 
 	/**
@@ -319,7 +335,11 @@ public abstract class Truck implements Node, Runnable, Observable, Cloneable {
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
-
+	/**
+	 * This function linking all packages with the same ID in MainOffice instance 
+	 * to synchronized the packages after Button "Restore" has been pressed in GUI
+	 * 
+	 */
 	public void linkPackages() {
 		for (int i=0;i<this.packages.size() ;i++) {
 			for (Package origin : MainOffice.getInstance().getPackages()) {
