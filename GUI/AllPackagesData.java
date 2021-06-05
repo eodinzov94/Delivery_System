@@ -15,7 +15,7 @@ import components.Package;
  *  Both methods are static, so there's no inherit need for class instantiation. 
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DeliveryGUI
  *
  */

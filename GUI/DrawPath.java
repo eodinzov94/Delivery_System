@@ -13,7 +13,7 @@ import java.awt.RenderingHints;
  * location & manner of the object. Those dictate the way it appears on the GUI
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DrawObject
  *
  */
@@ -111,11 +111,19 @@ public class DrawPath extends DrawObject {
 		gr.setColor(this.getColor());
 		gr.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
 	}
-
+	/**
+	 * Get function for the field 'isHidden'
+	 * 
+	 * @return isHidden - boolean
+	 * 
+	 */
 	public boolean isHidden() {
 		return isHidden;
 	}
-
+	/**
+	 * Setter for field  isHidden - boolean
+	 * 
+	 */
 	public void setHidden(boolean isHidden) {
 		this.isHidden = isHidden;
 	}

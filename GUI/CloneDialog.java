@@ -31,7 +31,7 @@ public class CloneDialog implements ActionListener{
 	private JComboBox<String> branchChoices;
 	
 	/**
-	 * Constructor for the Dialog window showing the different options of branches to choose between.
+	 * Constructor for the Dialog window showing the different options of branches to choose between for clonning.
 	 * <p>
 	 */
 	public CloneDialog() {
@@ -79,7 +79,12 @@ public class CloneDialog implements ActionListener{
 			branchChoices.addItem("Branch "+ (i+1));
 		infoDialog.add(branchChoices);
 	}
-	
+
+	/**
+	 * Overrides actionPerformed method, after OK button pressed, cloning the chosen brunch then closing the dialog window,
+	 * if cancel button being pressed closing the dialog window/
+	 * <p>
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton source = (JButton)e.getSource();

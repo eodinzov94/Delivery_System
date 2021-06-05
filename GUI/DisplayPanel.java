@@ -16,7 +16,7 @@ import components.State;
  * The panel handles UI updates by repainting all the components it contains every interval set by the system.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DeliveryGUI 
  *
  */
@@ -202,7 +202,11 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 			return 160 / (numBranches-1);
 		return 160;
 	}
-
+	/**
+	 * Main function draw every Object in display panel, uses help function to draw.
+	 * @param g - Graphics object.
+	 * @see Graphics
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (isHidden)
@@ -331,7 +335,11 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		throw new Exception("Matching branch not found");
 	}
 
-	@Override
+	/**
+	 * This method implements Runnable interface. Represents display panel 
+	 * Redrawing all object every 500MS
+	 *
+	 */
 	public void run() {
 		while (!MainOffice.isFinished) {
 			DeliveryGUI.pauser.look(); // Check the pauser to see if the program hasn't been suspended
@@ -344,19 +352,34 @@ public class DisplayPanel extends JLayeredPane implements Runnable {
 		repaint(); // repaint at the end of the program run, for the final update.
 
 	}
-
+	/**
+	 * Getter for field allBranches
+	 * @return allBranches - ArrayList<DrawBranch>
+	 *
+	 */
 	public static ArrayList<DrawBranch> getAllBranches() {
 		return allBranches;
 	}
-
+	/**
+	 * Getter for field allPackages
+	 * @return allPackages - ArrayList<DrawPackage>
+	 *
+	 */
 	public static ArrayList<DrawPackage> getAllPackages() {
 		return allPackages;
 	}
-
+	/**
+	 * Getter for field allTrucks
+	 * @return allTrucks - ArrayList<DrawTruck>
+	 *
+	 */
 	public static ArrayList<DrawTruck> getAllTrucks() {
 		return allTrucks;
 	}
-
+	/**
+	 * Setter - for the previous memento state, restores all the draw objects states from memento (State s)
+	 *
+	 */
 	public  void setState(State s) {
 		allBranches = s.allDrawBranches;
 		allPackages = s.allDrawPackages;

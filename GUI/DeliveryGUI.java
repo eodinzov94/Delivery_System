@@ -23,7 +23,7 @@ import components.Pauser;
  * It also contains needed objects and logics to connect the 'back-end' with the 'front-end' such as an instance of MainOffice and the thread for it.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DisplayPanel 
  * @see MainOffice
  *
@@ -157,8 +157,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			} catch (IOException e1) {
 			}
 		}
-		else if(bName.equals("Clone branch") && numOfBranches < 6) {
-			
+		else if(bName.equals("Clone branch") && numOfBranches < 6) {//"Clone branch" was selected, pauses the system, creating system copy, adding new branch, starting the system again
 			stopAllThreads();
 			try {
 				Thread.sleep(500L);
@@ -177,7 +176,7 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 			}
 		}
 		else if(bName.equals("Restore")&& numOfBranches >5) {
-			System.out.println("-------------------------RESTORE---------------------");
+			System.out.println("-------------------------RESTORE---------------------");//"Restore" was selected , pauses the system , setting Memento from previous state , starting the system again 
 			stopAllThreads();
 			MainOffice.getInstance().stopThreads();
 			try {
@@ -337,6 +336,9 @@ public class DeliveryGUI extends JFrame implements ActionListener {
 	public void setClickedBranchInfo(boolean isClickedBranchInfo) {
 		this.isClickedBranchInfo = isClickedBranchInfo;
 	}
+	/**
+	 * Helper function print amount of Threads running in system.
+	 */
 	public void printThreadsInfo() {
 		System.out.println("--------Thread Info------Active Threads:"+Thread.activeCount());
 	}

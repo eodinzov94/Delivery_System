@@ -9,7 +9,7 @@ import java.awt.Graphics;
  * It contains several functions and attributes that are shared among the various Drawable trucks we have.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DrawObject 
  *
  */
@@ -38,7 +38,10 @@ public abstract class DrawTruck extends DrawObject {
 		numTrucks++;
 		isHidden = true;
 	}
-	
+	/**
+	 * Copy constructor for the class.
+	 * Shallow copy because copying immutable fields.
+	 */
 	public DrawTruck(DrawTruck other) {
 		super((DrawObject)other);
 		destination = other.getDestination();

@@ -11,7 +11,7 @@ package GUI;
  * are both tailored to the specifics given for this assignment and also drawn out of well known formulae that are available online.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  *
  */
 public class Point {

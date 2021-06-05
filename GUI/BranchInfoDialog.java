@@ -19,7 +19,7 @@ import components.MainOffice;
  * Once a choice is received, the Dialog will display all the available information for the branch as of the time of request.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DeliveryGUI
  *
  */

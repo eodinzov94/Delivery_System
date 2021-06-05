@@ -11,7 +11,7 @@ import components.Package;
  * An instance of this class contains several attributes that describe the location & manner of the object. Those dictate the way it appears on the GUI
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DrawObject 
  *
  */
@@ -30,7 +30,10 @@ public class DrawNonStandardTruck extends DrawTruck {
 		super();
 		this.setColor(Color.PINK);
 	}
-
+	/**
+	 * Copy constructor for the class.
+	 * Shallow copy because copying immutable fields.
+	 */
 	public DrawNonStandardTruck(DrawNonStandardTruck other) {
 		super((DrawTruck)other);
 		this.setColor(other.getColor());

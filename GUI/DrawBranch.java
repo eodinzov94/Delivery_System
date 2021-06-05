@@ -12,7 +12,7 @@ import components.Branch;
  * An instance of this class contains several attributes that describe the location & manner of the object. Those dictate the way it appears on the GUI
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  * @see DrawObject 
  *
  */
@@ -41,7 +41,10 @@ public class DrawBranch extends DrawObject {
 		isHidden = false;
 	}
 	
-	
+	/**
+	 * Copy constructor for the class.
+	 * Shallow copy because copying immutable fields.
+	 */
 	public DrawBranch(DrawBranch other) {
 		super((DrawObject)other);
 		
@@ -135,10 +138,19 @@ public class DrawBranch extends DrawObject {
 	public int getBranchId() {
 		return branchId;
 	}
+	/**
+	 * Get function for the field 'isHidden'
+	 * 
+	 * @return isHidden - boolean
+	 * 
+	 */
 	public boolean isHidden() {
 		return isHidden;
 	}
-
+	/**
+	 * Setter for field  isHidden - boolean
+	 * 
+	 */
 	public void setHidden(boolean isHidden) {
 		this.isHidden = isHidden;
 	}

@@ -11,7 +11,7 @@ import components.Van;
  * An instance of this class contains several attributes that describe the location & manner of the object. Those dictate the way it appears on the GUI
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.20211
  * @see DrawObject 
  *
  */
@@ -28,7 +28,10 @@ public class DrawVan extends DrawTruck {
 		this.setColor(defaultColor);
 	}
 	
-	
+	/**
+	 * Copy constructor for the class.
+	 * Shallow copy because copying immutable fields.
+	 */
 	public DrawVan(DrawVan other) {
 		super((DrawTruck)other);
 		this.setColor(defaultColor);

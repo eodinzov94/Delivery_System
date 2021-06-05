@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * 
  * @see Node
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 1.0 -- 29.3.2021
+ * @version 3.0 -- 05.06.2021
  *
  *
  */
@@ -183,7 +183,13 @@ public class Van extends Truck {
 		if (!(super.packages.remove(p)))
 			System.out.println("ERROR! Problem removing package " + p.toString());
 	}
-
+	/**
+	 * Overrides Clone method
+	 * <p>
+	 * Different then Copy Constructor, because it returns Van with differend Id's, 
+	 * 
+	 * @return Van object 
+	 */
 	protected Object clone() throws CloneNotSupportedException {
 		Object obj = null;
 		obj = super.clone();

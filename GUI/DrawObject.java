@@ -9,7 +9,7 @@ import java.awt.Graphics;
  * It contains several functions and attributes that are shared among the various Drawable objects we have.
  * 
  * @author Ron Vayner 315431346 & Evgeny Odinzov 328667217
- * @version 2.0 -- 26.4.2021
+ * @version 3.0 -- 05.06.2021
  *
  */
 public abstract class DrawObject implements Listener {
@@ -27,7 +27,10 @@ public abstract class DrawObject implements Listener {
 		currentLocation = loc;
 		this.c = defaultObjectColor;
 	}
-
+	/**
+	 * Copy constructor for the class.
+	 * Shallow copy because copying immutable fields.
+	 */
 	public DrawObject(DrawObject other) {
 		currentLocation = other.getCurrentLocation();
 		this.c = other.c;
