@@ -31,7 +31,10 @@ public class NonStandardTruck extends Truck {
 		System.out.println("Creating " + this);
 	}
 
-	
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Truck object to copy fields from
+	 */
 	public NonStandardTruck(Truck other) {
 		super(other);
 		// default values

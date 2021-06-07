@@ -52,6 +52,12 @@ public class Hub extends Branch implements Node {
 		System.out.println("Copying " + super.toString());
 	}
 
+	/**Helper function to reset the static parameters both in the GUI and the program.
+	 * <p>
+	 * occasionally during run-time we need to soft-reset these parameters to refresh the system,
+	 * this function does that.
+	 * 
+	 */
 	public void resetHub() {
 		Truck.numTrucks = 0;
 		Package.numOfPackages = 0;
@@ -243,7 +249,14 @@ public class Hub extends Branch implements Node {
 		branches.add(b);
 		
 	}
-
+	/**Clones an existing branch by a given ID and immediately starts it so it joins the rest of the system. 
+	 * <p>
+	 * Uses the branchs' clone() implementation to create a new branch, add it to the list of branches, create
+	 * a thread for it and start it.
+	 * 
+	 * @param id - ID of the branch to clone.
+	 * 
+	 */
 	public void cloneBranch(int id) throws Exception {
 		if (!(id >= 0 && id < branches.size()))
 			throw new Exception("Invalid clone id received!\n");
@@ -272,16 +285,33 @@ public class Hub extends Branch implements Node {
 		branchThreads.add(t);
 	}
 
+	/**Overrides the clone functon for this class, however the Hub cannot be copied so it throws and error.
+	 * 
+	 */
 	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException("Cannot clone hub!");
 	}
 
+	/**Simple helper function to set the current list of branches to a new one received as parameter.
+	 * 
+	 * @param branches - ArrayList of branches.
+	 */
 	public void setBranches(ArrayList<Branch> branches) {
 		this.branches = branches;
 	}
 
-	
+	/**helper function to help set the hub when a state change occurs.
+	 * <p>
+	 * State change means the last branch was removed (implemented as a stack) <br>
+	 * therefore, we remove the last branch by copying all of the other ones from the given
+	 * Hub instance by the state.
+	 * <p>
+	 * As with the nature of state changes, this is a shallow copy transfer to what had already existed
+	 * in the previous state.
+	 * 
+	 * @param h - previous states' hub instance.
+	 */
 	public void setHub(Hub h) {
 		branches.remove(branches.size()-1);
 		for(int i=0; i<branches.size();i++) {
@@ -291,6 +321,9 @@ public class Hub extends Branch implements Node {
 		}
 		this.setBranch(h);
 	}
+	/**Helper function to stop all the branches threads.
+	 * 
+	 */
 	@SuppressWarnings("deprecation")
 	public void stopAllBranches() {
 		for( Thread t: branchThreads)

@@ -32,10 +32,18 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 	// Static fields
 	private static int state = 0;
 
+	/**Helper function to receive the current active state in the system. 
+	 * 
+	 * @return state - current active state
+	 */
 	public static synchronized int getState() {
 		return state;
 	}
 
+	/**Helper function to set the current active state to a new one.
+	 * 
+	 * @param s - number of state that's currently taking over.
+	 */
 	public static synchronized void setState(int s) {
 		state = s;
 	}
@@ -59,6 +67,13 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 	int lineNum;
 
 	// Methods or Functions
+	/**Helper function to receive the MainOffice instance.
+	 *<p> 
+	 * As of version 3.0, MainOffice is a Singleton, therefore at most 1 instance of it is active
+	 * in a system at any given time.
+	 * 
+	 * @return instance - the main office instance.
+	 */
 	public static MainOffice getInstance() {
 		if (instance == null) {
 			synchronized (MainOffice.class) {
@@ -70,6 +85,16 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		return instance;
 	}
 
+	/**Helper function to help set the MainOffice instance using a given state.
+	 * <p>
+	 * Whenever a state restore happens, this function is called with a given State instance containing all the
+	 * needed references to reset the system to the previous state.
+	 * <br>
+	 * This function calls all the helper 'set...' functions in the other classes to restore the system to the 
+	 * previous state
+	 * 
+	 * @param s - State instance containing references.
+	 */
 	public void setMainOffice(State s) {
 		restoreTrackingTXT();
 		setClock(s.clock);
@@ -325,6 +350,9 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		hub.startAllTrucks();
 	}
 
+	/**Helper function to restart all the threads belonging to different elements in the system. 
+	 * 
+	 */
 	public void resetThreads() {
 		resetCustomers();
 		for (Branch b : hub.getBranches()) {
@@ -335,6 +363,9 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		hub.startAllTrucks();
 	}
 
+	/**Helper function to stop the Customer threads in the system. 
+	 * 
+	 */
 	public void stopCustomers() {
 		((ExecutorService) executor).shutdownNow();
 	}
@@ -347,12 +378,18 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		play();
 	}
 
+	/**Helper function to start the Customer threads using an ExecutorService.
+	 * 
+	 */
 	public void startCustomers() {
 		for (Customer c : customers) {
 			executor.execute(c);
 		}
 	}
 
+	/**Helper function to reset the threads for the customers using a new Executor thread pool.
+	 * 
+	 */
 	public void resetCustomers() {
 		executor = Executors.newFixedThreadPool(2);
 		startCustomers();
@@ -369,6 +406,11 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		rwl.writeLock().unlock();
 	}
 
+	/**This function receives a customer ID, and scans the list of packages to check if the customers' packages have arrived at their destination.
+	 * 
+	 * @param customerId - ID of the customer to check
+	 * @return true if the customer is finished waiting, false otherwise.
+	 */
 	public boolean checkIfAllPackagesDeliveredByCustomerId(Integer customerId) {
 		int deliveredCounter = 0;
 		rwl.readLock().lock();
@@ -394,6 +436,13 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		return deliveredCounter == 5;
 	}
 
+	/**Helper function that uses a read line from the tracking file and a customer's ID to see if the current line
+	 * represents a delivered package belonging to the customer.
+	 * 
+	 * @param line - line from the tracking file.
+	 * @param customer - customers' ID in string format
+	 * @return true if the line represents a package belonging to the customer that has been delivered, false otherwise.
+	 */
 	public boolean checkIfDeliveredInStringByCustomerId(String line, String customer) {
 		if (!line.contains(customer) || !line.contains("DELIVERED"))
 			return false;
@@ -401,26 +450,60 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 
 	}
 
+	/**
+	 * Get function for the field 'customers'
+	 * 
+	 * @return customers - ArrayList<Customer>
+	 * 
+	 */
 	public ArrayList<Customer> getCustomers() {
 		return customers;
 	}
-
+	/**
+	 * Get function for the field 'hub'
+	 * 
+	 * @return hub - Hub
+	 * 
+	 */
 	public Hub getHub() {
 		return hub;
 	}
-
+	
+	/**
+	 * Set function for the field 'hub'
+	 * 
+	 * @param hub - Hub object.
+	 * 
+	 */
 	public void setHub(Hub hub) {
 		this.hub = hub;
 	}
 
+	/**
+	 * Set function for the field 'customers'
+	 * 
+	 * @param customers - ArrayList<Customer> object.
+	 * 
+	 */
 	public void setCustomers(ArrayList<Customer> customers) {
 		this.customers = customers;
 	}
 
+	/**
+	 * Set function for the field 'clock'
+	 * 
+	 * @param clock - int object.
+	 * 
+	 */
 	public static void setClock(int clock) {
 		MainOffice.clock = clock;
 	}
 
+	/**Helper function that calls for all the threads in the system to stop.
+	 * <p>
+	 * Primarily used when the 'Stop' button is called, or when a state change is imminent.
+	 * 
+	 */
 	public void stopThreads() {
 		stopCustomers();
 		for (Branch b : hub.getBranches()) {
@@ -430,6 +513,12 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		hub.stopAllBranches();
 	}
 
+	/**Restores the Tracking.txt file when a state change occurs.
+	 * <p>
+	 * We use 2 paths to keep a Tracking file, one for the up-to-date and currently read file,
+	 * and one for the copy of the previous one used when we restore a state.
+	 * 
+	 */
 	private void restoreTrackingTXT() {
 		File dest = new File(MainOffice.filePath);
 		File source = new File(MainOffice.filePathCopy);
@@ -451,6 +540,12 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 		}
 	}
 
+	/**Copies the Tracking.txt file to be saved for when a state change will be requested.
+	 * <p>
+	 * We use 2 paths to keep a Tracking file, one for the up-to-date and currently read file,
+	 * and one for the copy of the previous one used when we restore a state.
+	 * 
+	 */
 	public File CopyTrackingTXT(String destination) {
 		try {
 			Thread.sleep(150);
@@ -476,6 +571,10 @@ public class MainOffice implements Runnable, PropertyChangeListener {
 
 	}
 
+	/**Get function for the field 'rwl'
+	 * 
+	 * @return rwl - ReentrantReadWriteLock object.
+	 */
 	public static ReentrantReadWriteLock getRwl() {
 		return rwl;
 	}

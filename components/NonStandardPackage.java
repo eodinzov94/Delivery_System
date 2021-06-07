@@ -35,7 +35,10 @@ public class NonStandardPackage extends Package {
 		System.out.println("Creating " + this);
 	}
 
-	
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Package object to copy fields from
+	 */
 	public NonStandardPackage(Package other) {
 		super(other);
 		NonStandardPackage nsp = (NonStandardPackage) other;

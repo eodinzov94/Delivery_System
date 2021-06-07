@@ -57,6 +57,10 @@ public abstract class Package implements Observable{
 		support.firePropertyChange("CREATION", null, this);
 	}
 
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Package object to copy fields from
+	 */
 	public Package(Package other) {
 		this.priority = other.priority;
 		this.senderAddress = other.senderAddress;
@@ -257,10 +261,18 @@ public abstract class Package implements Observable{
 		return guiListener;
 	}
 	
+	/**Helper function to add a PropertyChangeListener to this object, as used in the PropertyChangeSupport class.
+	 * 
+	 * @param pcl - PropertyChangeListener to add.
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener pcl){ 	
     	support.addPropertyChangeListener(pcl); 
     } 
     
+	/**Helper function to remove a PropertyChangeListener to this object, as used in the PropertyChangeSupport class.
+	 * 
+	 * @param pcl - PropertyChangeListener to remove.
+	 */
     public void removePropertyChangeListener(PropertyChangeListener pcl){ 	
     	support.removePropertyChangeListener(pcl); 
     } 

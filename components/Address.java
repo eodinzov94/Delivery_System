@@ -1,4 +1,4 @@
-package components;
+	package components;
 
 /**
  * This class represents an address for a customer; Both the sender and the

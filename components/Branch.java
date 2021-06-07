@@ -43,9 +43,16 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		truckThreads = new ArrayList<Thread>();
 	}
 
+	/**
+	 * Copy Constructor for the class Branch.
+	 * <p>
+	 * Copies over all the contents of an existing branch.
+	 */
 	public Branch(Branch other) {
+		
 		this.branchId = other.getBranchId();
 		this.branchName = other.branchName;
+		// copy trucks and threads
 		truckThreads = new ArrayList<Thread>();
 		this.listTrucks = new ArrayList<Truck>();
 		for (Truck t : other.getListTrucks()) {
@@ -56,6 +63,7 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 			else if (t instanceof NonStandardTruck)
 				listTrucks.add(new NonStandardTruck(t));
 		}
+		// copy packages
 		this.listPackages = new Vector<Package>();
 		for (Package p : other.getListPackages()) {
 			if (p instanceof SmallPackage)
@@ -433,20 +441,42 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 			listPackages.remove(p);
 		}
 	}
-
+	/**
+	 * Set function for the field 'branchId'
+	 * 
+	 * @param id - integer.
+	 * 
+	 */
 	private void setId(int id) {
 		this.branchId = id;
 	}
 
+	/**
+	 * Set function for the field 'branchName'
+	 * 
+	 * @param name - String.
+	 * 
+	 */
 	private void setName(String name) {
 
 		this.branchName = name;
 	}
 
+	/**
+	 * Set function for the field 'listPackages'
+	 * 
+	 * @param packages - Vector<Package> object.
+	 * 
+	 */
 	private void setListPackages(Vector<Package> packages) {
 		this.listPackages = packages;
 	}
 
+	/**Clone function for the class, used whenever a clone of an instance of the class is meant to be created.
+	 * <p>
+	 * Mainly used when the cloning of a branch is called for in the GUI by the user.
+	 * @return clone - The clone for this instance.
+	 */
 	protected Object clone() throws CloneNotSupportedException {
 		Object obj = null;
 		obj = super.clone();
@@ -464,6 +494,13 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		clone.guiListener.getPathToHub().setHidden(false);
 		return clone;
 	}
+	
+	/** Helper function used whenever the current instance of the class needs to be updated with new references.
+	 * <p>
+	 * Mainly occurs whenever a state change happened and the references need to be shallow copied.
+	 * 
+	 * @param b - Branch object.
+	 */
 	public void setBranch(Branch b) {
 		listTrucks = b.listTrucks;
 		listPackages = b.listPackages;
@@ -475,6 +512,11 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 		this.registerListener();
 		
 	}
+	/**Helper function to re-link the packages to the GUI listener.
+	 * <p>
+	 * Used when state changes occur and the current active state's objects aren't synched with the GUI.
+	 * 
+	 */
 	public void linkPackages() {
 		for (int i=0;i<this.listPackages.size() ;i++) {
 			for (Package origin : MainOffice.getInstance().getPackages()) {
@@ -486,6 +528,12 @@ public class Branch implements Node, Runnable, Observable, Cloneable {
 
 		}
 	}
+	
+	/**Helper function to stop every thread of the branches' local trucks.
+	 * <p>
+	 * Only to be used when state changes occur.
+	 * 
+	 */
 	@SuppressWarnings("deprecation")
 	public void stopAllTrucks() {
 		for( Thread t: truckThreads)
