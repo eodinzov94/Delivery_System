@@ -27,7 +27,10 @@ public class SmallPackage extends Package {
 		System.out.println("Creating "+ this);
 	}
 	
-	
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Package object to copy fields from
+	 */
 	public SmallPackage(Package other) {
 		super(other);
 		this.acknowledge=((SmallPackage)other).acknowledge;

@@ -25,7 +25,10 @@ public class StandardPackage extends Package {
 		System.out.println("Creating "+ this);
 	}
 	
-	
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Package object to copy fields from
+	 */
 	public StandardPackage(Package other) {
 		super(other);
 		this.weight=((StandardPackage)other).weight;

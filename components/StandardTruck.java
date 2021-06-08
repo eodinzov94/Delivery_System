@@ -35,7 +35,10 @@ public class StandardTruck extends Truck {
 		System.out.println("Creating " + this);
 	}
 
-	
+	/**Copy constructor for the class
+	 * 
+	 * @param other - Truck object to copy fields from
+	 */
 	public StandardTruck(Truck other) {
 		super(other);
 		StandardTruck st= (StandardTruck)other;

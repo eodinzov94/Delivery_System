@@ -2,7 +2,7 @@ package components;
 
 import java.util.Stack;
 
-/**Caretaker class for the state changing procedure.
+/**Caretaker class for the state changing procedure of the memento DP.
  * <p>
  * The states are implemented in a Stack so that a LIFO order is established between them, meaning
  * you can only return back to the directly previous state saved (much like a ctrl-z operation).
